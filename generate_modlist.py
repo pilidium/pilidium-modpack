@@ -76,7 +76,6 @@ MOD_INFO = {
     # ── Server-only mods ──
     "additional structures":       {"desc": "Adds many new structures to world generation", "side": "server", "req": "required"},
     "chunky":                      {"desc": "Pre-generates world chunks to reduce lag on exploration", "side": "server", "req": "optional"},
-    "distant horizons":            {"desc": "Renders low-detail terrain far beyond the normal view distance (LODs)", "side": "both", "req": "optional"},
     "explorify":                   {"desc": "Adds dozens of small vanilla-style structures to the world", "side": "server", "req": "required"},
     "incendium":                   {"desc": "Complete overhaul of Nether world generation with structures & biomes", "side": "server", "req": "required"},
     "moogs end structures":        {"desc": "Adds new structures to the End dimension", "side": "server", "req": "required"},
@@ -180,7 +179,6 @@ CONFIG_TO_MOD = {
     "collective.json5": "Collective",
     "collective/entity_names.json": "Collective",
     "ctov.json": "ChoiceTheorem's Overhauled Village",
-    "DistantHorizons.toml": "Distant Horizons",
     "ferritecore.mixin.properties": "FerriteCore",
     "forgeconfigapiport.toml": "Forge Config API Port",
     "harvest_with_ease-common.toml": "Harvest With Ease",
@@ -233,7 +231,7 @@ GUIDE_COVERED_MODS = {
     "iris shaders", "sodium", "mod menu",
     "lithium", "c2me", "ferritecore", "krypton",
     "alternate current", "antixray", "packetfixer",
-    "sparse structures", "distant horizons",
+    "sparse structures",
     "chest protection", "brewery",
     # Libraries (never need guide entries)
     "bad packets", "balm", "cloth config api", "fabric api",
