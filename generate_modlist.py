@@ -8,6 +8,7 @@ import os
 import re
 import json
 import html
+import subprocess
 import glob
 import gzip
 import struct
@@ -1381,19 +1382,21 @@ def collect_gamerules():
     return rules, changed
 
 
-def _get_dir_size(path):
-    """Return total size of a directory in bytes, or 0 if not found."""
-    total = 0
+def _get_dir_size(path, exclude=None):
+    """Return total size of a directory in bytes using du (fast)."""
     if not os.path.isdir(path):
         return 0
-    for dirpath, _dirnames, filenames in os.walk(path):
-        for f in filenames:
-            fp = os.path.join(dirpath, f)
-            try:
-                total += os.path.getsize(fp)
-            except OSError:
-                pass
-    return total
+    try:
+        cmd = ["du", "-sb"]
+        if exclude:
+            cmd.append(f"--exclude={exclude}")
+        cmd.append(path)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        if result.returncode == 0:
+            return int(result.stdout.split()[0])
+    except Exception:
+        pass
+    return 0
 
 
 def _format_size(nbytes):
@@ -1415,13 +1418,11 @@ def generate_html():
     gamerules, changed_gamerules = collect_gamerules()
     datapacks = collect_datapacks()
 
-    # World / backup sizes
+    # World / backup sizes  (du is much faster than os.walk for large dirs)
     world_dir = os.path.join(SERVER_DIR, "world")
     backup_dir = os.path.join(SERVER_DIR, "world", ".git")
-    world_size_bytes = _get_dir_size(world_dir)
+    world_only_bytes = _get_dir_size(world_dir, exclude=".git")
     backup_size_bytes = _get_dir_size(backup_dir)
-    # World size excluding .git
-    world_only_bytes = world_size_bytes - backup_size_bytes
     world_size_str = _format_size(world_only_bytes)
     backup_size_str = _format_size(backup_size_bytes)
 
