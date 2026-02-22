@@ -199,6 +199,9 @@ h1 small {
     padding: 0.75rem 1.25rem;
     background: var(--surface);
     border: 1px solid var(--border);
+    max-width: 100%;
+    overflow-x: auto;
+    box-sizing: border-box;
 }
 .legend-item {
     display: flex;
@@ -375,6 +378,7 @@ tbody tr:hover { background: rgba(85,255,85,0.05); }
 tbody tr.hidden { display: none; }
 td { padding: 0.6rem 1rem; vertical-align: middle; }
 td.mod-name { white-space: nowrap; font-weight: 600; color: var(--text-bright); }
+td.mod-name .mob-desc { display: none; }
 td.mod-desc { color: var(--text-dim); min-width: 200px; }
 td code {
     background: var(--code-bg);
@@ -680,7 +684,7 @@ td.num-cell {
     .tab { padding: 0.5rem 0.85rem; font-size: 0.75rem; flex-shrink: 0; }
     .tab-panel { padding: 1rem 0.85rem; border-radius: 0 0 var(--radius) var(--radius); }
     .controls { gap: 0.5rem; }
-    .legend { gap: 0.4rem 1.25rem; font-size: 0.72rem; grid-template-columns: repeat(2, auto); }
+    .legend { gap: 0.4rem 1rem; font-size: 0.72rem; grid-template-columns: repeat(2, auto); max-width: 100%; }
     td { padding: 0.45rem 0.65rem; font-size: 0.75rem; }
     td.mod-desc { min-width: 120px; }
     .config-header { flex-wrap: wrap; gap: 0.4rem; }
@@ -702,11 +706,12 @@ td.num-cell {
     .header-content { flex-wrap: wrap; gap: 0.5rem; }
     .theme-toggle { font-size: 0.68rem; padding: 0.3rem 0.6rem; }
     .legend { grid-template-columns: 1fr 1fr; gap: 0.35rem 0.75rem; font-size: 0.68rem; padding: 0.6rem 0.75rem; }
-    /* Hide less-important table columns on small phones */
-    table th:nth-child(n+3),
-    table td:nth-child(n+3) { display: none; }
+    /* Hide Required/Side columns & desktop description; show inline description */
+    .mod-table-wrap th:nth-child(3), .mod-table-wrap td:nth-child(3),
+    .mod-table-wrap th:nth-child(4), .mod-table-wrap td:nth-child(4) { display: none; }
+    .mod-table-wrap td.mod-desc, .mod-table-wrap th:nth-child(5) { display: none; }
     td.mod-name { white-space: normal; word-break: break-word; }
-    td.mod-desc { min-width: 0; }
+    td.mod-name .mob-desc { display: block; font-weight: 400; font-size: 0.72rem; color: var(--text-dim); margin-top: 0.2rem; line-height: 1.35; }
     .config-content pre { font-size: 0.68rem; padding: 0.65rem; }
     h2 { font-size: 1rem; margin: 1.25rem 0 0.75rem; }
     h2 .count { font-size: 0.68rem; display: block; margin-left: 0; margin-top: 0.15rem; }
@@ -812,234 +817,234 @@ td.num-cell {
                 <tbody>
                     
                 <tr data-name="betterf3" data-req="optional" data-side="client">
-                    <td class="mod-name"><strong>BetterF3</strong></td>
+                    <td class="mod-name"><strong>BetterF3</strong><span class="mob-desc">Replaces the F3 debug screen with a customisable, more readable one</span></td>
                     <td><code>17.0.0</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-client">Client</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-client">Client</span></td>
                     <td class="mod-desc">Replaces the F3 debug screen with a customisable, more readable one</td>
                 </tr>
 
                 <tr data-name="fallingtree" data-req="optional" data-side="both">
-                    <td class="mod-name"><strong>FallingTree</strong></td>
+                    <td class="mod-name"><strong>FallingTree</strong><span class="mob-desc">Chop a whole tree by breaking a single log block</span></td>
                     <td><code>1.21.11-1.21.11.3</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Chop a whole tree by breaking a single log block</td>
                 </tr>
 
                 <tr data-name="origins: legacy" data-req="required" data-side="both">
-                    <td class="mod-name"><strong>Origins: Legacy</strong></td>
+                    <td class="mod-name"><strong>Origins: Legacy</strong><span class="mob-desc">Choose an Origin at the start that gives unique abilities &amp; weaknesses</span></td>
                     <td><code>1.11.4+1.21.11</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Choose an Origin at the start that gives unique abilities &amp; weaknesses</td>
                 </tr>
 
                 <tr data-name="bad packets" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>bad packets</strong></td>
+                    <td class="mod-name"><strong>bad packets</strong><span class="mob-desc">Packet handling library for Fabric/Quilt mods</span></td>
                     <td><code>fabric-0.11.2</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Packet handling library for Fabric/Quilt mods</td>
                 </tr>
 
                 <tr data-name="balm" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>Balm</strong></td>
+                    <td class="mod-name"><strong>Balm</strong><span class="mob-desc">Abstraction layer / library used by BlayMappings mods (Waystones, etc.)</span></td>
                     <td><code>21.11.6+fabric-1.21.11</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Abstraction layer / library used by BlayMappings mods (Waystones, etc.)</td>
                 </tr>
 
                 <tr data-name="bobby" data-req="optional" data-side="client">
-                    <td class="mod-name"><strong>Bobby</strong></td>
+                    <td class="mod-name"><strong>Bobby</strong><span class="mob-desc">Caches and renders chunks beyond server view-distance on the client</span></td>
                     <td><code>5.2.11+mc1.21.11</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-client">Client</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-client">Client</span></td>
                     <td class="mod-desc">Caches and renders chunks beyond server view-distance on the client</td>
                 </tr>
 
                 <tr data-name="carry on" data-req="optional" data-side="both">
-                    <td class="mod-name"><strong>Carry On</strong></td>
+                    <td class="mod-name"><strong>Carry On</strong><span class="mob-desc">Lets you pick up and carry tile-entities and mobs</span></td>
                     <td><code>2.9.0</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Lets you pick up and carry tile-entities and mobs</td>
                 </tr>
 
                 <tr data-name="chat heads" data-req="optional" data-side="client">
-                    <td class="mod-name"><strong>Chat Heads</strong></td>
+                    <td class="mod-name"><strong>Chat Heads</strong><span class="mob-desc">Adds player head icons next to chat messages</span></td>
                     <td><code>1.2.1</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-client">Client</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-client">Client</span></td>
                     <td class="mod-desc">Adds player head icons next to chat messages</td>
                 </tr>
 
                 <tr data-name="chunk loaders" data-req="optional" data-side="both">
-                    <td class="mod-name"><strong>Chunk Loaders</strong></td>
+                    <td class="mod-name"><strong>Chunk Loaders</strong><span class="mob-desc">Adds blocks that keep chunks loaded when you are away</span></td>
                     <td><code>1.2.9-fabric-mc1.21.11</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Adds blocks that keep chunks loaded when you are away</td>
                 </tr>
 
                 <tr data-name="cloth config api" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>Cloth Config API</strong></td>
+                    <td class="mod-name"><strong>Cloth Config API</strong><span class="mob-desc">Configuration screen library used by many mods</span></td>
                     <td><code>21.11.153+fabric</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Configuration screen library used by many mods</td>
                 </tr>
 
                 <tr data-name="enchantment descriptions" data-req="optional" data-side="client">
-                    <td class="mod-name"><strong>Enchantment Descriptions</strong></td>
+                    <td class="mod-name"><strong>Enchantment Descriptions</strong><span class="mob-desc">Adds enchantment descriptions to tooltips</span></td>
                     <td><code>21.11.1</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-client">Client</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-client">Client</span></td>
                     <td class="mod-desc">Adds enchantment descriptions to tooltips</td>
                 </tr>
 
                 <tr data-name="fabric api" data-req="required" data-side="both">
-                    <td class="mod-name"><strong>Fabric API</strong></td>
+                    <td class="mod-name"><strong>Fabric API</strong><span class="mob-desc">Essential hooks and interoperability layer for Fabric mods</span></td>
                     <td><code>0.141.3+1.21.11</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Essential hooks and interoperability layer for Fabric mods</td>
                 </tr>
 
                 <tr data-name="fabric language kotlin" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>Fabric Language Kotlin</strong></td>
+                    <td class="mod-name"><strong>Fabric Language Kotlin</strong><span class="mob-desc">Enables mods written in Kotlin on Fabric</span></td>
                     <td><code>1.13.9+kotlin.2.3.10</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Enables mods written in Kotlin on Fabric</td>
                 </tr>
 
                 <tr data-name="iris shaders" data-req="optional" data-side="client">
-                    <td class="mod-name"><strong>Iris Shaders</strong></td>
+                    <td class="mod-name"><strong>Iris Shaders</strong><span class="mob-desc">Shader pack loader compatible with OptiFine shaders, works with Sodium</span></td>
                     <td><code>1.10.5+1.21.11-fabric</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-client">Client</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-client">Client</span></td>
                     <td class="mod-desc">Shader pack loader compatible with OptiFine shaders, works with Sodium</td>
                 </tr>
 
                 <tr data-name="just enough items (jei)" data-req="optional" data-side="both">
-                    <td class="mod-name"><strong>Just Enough Items (JEI)</strong></td>
+                    <td class="mod-name"><strong>Just Enough Items (JEI)</strong><span class="mob-desc">Item and recipe browser / lookup GUI</span></td>
                     <td><code>27.4.0.15</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Item and recipe browser / lookup GUI</td>
                 </tr>
 
                 <tr data-name="lootr" data-req="required" data-side="both">
-                    <td class="mod-name"><strong>Lootr</strong></td>
+                    <td class="mod-name"><strong>Lootr</strong><span class="mob-desc">Makes loot containers per-player so everyone gets their own loot</span></td>
                     <td><code>1.21.11-1.20.34.101</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Makes loot containers per-player so everyone gets their own loot</td>
                 </tr>
 
                 <tr data-name="mod menu" data-req="optional" data-side="client">
-                    <td class="mod-name"><strong>Mod Menu</strong></td>
+                    <td class="mod-name"><strong>Mod Menu</strong><span class="mob-desc">Adds an in-game mod list screen with config access</span></td>
                     <td><code>17.0.0-beta.2</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-client">Client</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-client">Client</span></td>
                     <td class="mod-desc">Adds an in-game mod list screen with config access</td>
                 </tr>
 
                 <tr data-name="text placeholder api" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>Text Placeholder API</strong></td>
+                    <td class="mod-name"><strong>Text Placeholder API</strong><span class="mob-desc">Server-side text placeholder / formatting API</span></td>
                     <td><code>2.8.2+1.21.10</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Server-side text placeholder / formatting API</td>
                 </tr>
 
                 <tr data-name="prickle" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>Prickle</strong></td>
+                    <td class="mod-name"><strong>Prickle</strong><span class="mob-desc">Library providing shared utilities for BlayMappings mods</span></td>
                     <td><code>21.11.1</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Library providing shared utilities for BlayMappings mods</td>
                 </tr>
 
                 <tr data-name="promenade" data-req="required" data-side="both">
-                    <td class="mod-name"><strong>Promenade</strong></td>
+                    <td class="mod-name"><strong>Promenade</strong><span class="mob-desc">Adds new biomes, mobs, and building blocks to world generation</span></td>
                     <td><code>5.4.0</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Adds new biomes, mobs, and building blocks to world generation</td>
                 </tr>
 
                 <tr data-name="sodium" data-req="required" data-side="client">
-                    <td class="mod-name"><strong>Sodium</strong></td>
+                    <td class="mod-name"><strong>Sodium</strong><span class="mob-desc">High-performance rendering engine replacement — massive FPS improvements</span></td>
                     <td><code>mc1.21.11-0.8.4-fabric</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-client">Client</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-client">Client</span></td>
                     <td class="mod-desc">High-performance rendering engine replacement — massive FPS improvements</td>
                 </tr>
 
                 <tr data-name="supermartijn642&#x27;s config lib" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>SuperMartijn642&#x27;s Config Lib</strong></td>
+                    <td class="mod-name"><strong>SuperMartijn642&#x27;s Config Lib</strong><span class="mob-desc">Configuration library for SuperMartijn642&#x27;s mods</span></td>
                     <td><code>1.1.8-fabric-mc1.21.11</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Configuration library for SuperMartijn642&#x27;s mods</td>
                 </tr>
 
                 <tr data-name="supermartijn642&#x27;s core lib" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>SuperMartijn642&#x27;s Core Lib</strong></td>
+                    <td class="mod-name"><strong>SuperMartijn642&#x27;s Core Lib</strong><span class="mob-desc">Core library for SuperMartijn642&#x27;s mods</span></td>
                     <td><code>1.1.20-fabric-mc1.21.11</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Core library for SuperMartijn642&#x27;s mods</td>
                 </tr>
 
                 <tr data-name="waystones" data-req="required" data-side="both">
-                    <td class="mod-name"><strong>Waystones</strong></td>
+                    <td class="mod-name"><strong>Waystones</strong><span class="mob-desc">Adds waystones for fast-travel teleportation between locations</span></td>
                     <td><code>21.11.4+fabric-1.21.11</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Adds waystones for fast-travel teleportation between locations</td>
                 </tr>
 
                 <tr data-name="wthit" data-req="optional" data-side="both">
-                    <td class="mod-name"><strong>WTHIT</strong></td>
+                    <td class="mod-name"><strong>WTHIT</strong><span class="mob-desc">&quot;What The Hell Is That&quot; – shows info tooltip when looking at blocks/entities</span></td>
                     <td><code>fabric-18.2.1</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">&quot;What The Hell Is That&quot; – shows info tooltip when looking at blocks/entities</td>
                 </tr>
 
                 <tr data-name="xaero&#x27;s minimap" data-req="optional" data-side="client">
-                    <td class="mod-name"><strong>Xaero&#x27;s Minimap</strong></td>
+                    <td class="mod-name"><strong>Xaero&#x27;s Minimap</strong><span class="mob-desc">Real-time minimap overlay with waypoints</span></td>
                     <td><code>fabric-1.21.11-25.3.10</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-client">Client</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-client">Client</span></td>
                     <td class="mod-desc">Real-time minimap overlay with waypoints</td>
                 </tr>
 
                 <tr data-name="xaero&#x27;s world map" data-req="optional" data-side="client">
-                    <td class="mod-name"><strong>Xaero&#x27;s World Map</strong></td>
+                    <td class="mod-name"><strong>Xaero&#x27;s World Map</strong><span class="mob-desc">Full-screen world map companion to Xaero&#x27;s Minimap</span></td>
                     <td><code>fabric-1.21.11-1.40.11</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-client">Client</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-client">Client</span></td>
                     <td class="mod-desc">Full-screen world map companion to Xaero&#x27;s Minimap</td>
                 </tr>
 
                 <tr data-name="yetanotherconfiglib (yacl)" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>YetAnotherConfigLib (YACL)</strong></td>
+                    <td class="mod-name"><strong>YetAnotherConfigLib (YACL)</strong><span class="mob-desc">Configuration screen library (YACL)</span></td>
                     <td><code>3.8.2+1.21.11-fabric</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Configuration screen library (YACL)</td>
                 </tr>
 
                 <tr data-name="zoomify" data-req="optional" data-side="client">
-                    <td class="mod-name"><strong>Zoomify</strong></td>
+                    <td class="mod-name"><strong>Zoomify</strong><span class="mob-desc">Adds a configurable zoom key (like OptiFine zoom)</span></td>
                     <td><code>2.15.2+1.21.11</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-client">Client</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-client">Client</span></td>
                     <td class="mod-desc">Adds a configurable zoom key (like OptiFine zoom)</td>
                 </tr>
                 </tbody>
@@ -1071,474 +1076,474 @@ td.num-cell {
                 <tbody>
                     
                 <tr data-name="additionalstructures" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>AdditionalStructures</strong></td>
+                    <td class="mod-name"><strong>AdditionalStructures</strong><span class="mob-desc">Adds many new structures to world generation</span></td>
                     <td><code>1.21-</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adds many new structures to world generation</td>
                 </tr>
 
                 <tr data-name="chunky" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>Chunky</strong></td>
+                    <td class="mod-name"><strong>Chunky</strong><span class="mob-desc">Pre-generates world chunks to reduce lag on exploration</span></td>
                     <td><code>1.4.55</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Pre-generates world chunks to reduce lag on exploration</td>
                 </tr>
 
                 <tr data-name="distanthorizons" data-req="optional" data-side="both">
-                    <td class="mod-name"><strong>DistantHorizons</strong></td>
+                    <td class="mod-name"><strong>DistantHorizons</strong><span class="mob-desc">Renders low-detail terrain far beyond the normal view distance (LODs)</span></td>
                     <td><code>2.4.5-b-1.21.11-fabric-neoforge</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Renders low-detail terrain far beyond the normal view distance (LODs)</td>
                 </tr>
 
                 <tr data-name="explorify" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>Explorify</strong></td>
+                    <td class="mod-name"><strong>Explorify</strong><span class="mob-desc">Adds dozens of small vanilla-style structures to the world</span></td>
                     <td><code>1.6.4</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adds dozens of small vanilla-style structures to the world</td>
                 </tr>
 
                 <tr data-name="fallingtree" data-req="optional" data-side="both">
-                    <td class="mod-name"><strong>FallingTree</strong></td>
+                    <td class="mod-name"><strong>FallingTree</strong><span class="mob-desc">Chop a whole tree by breaking a single log block</span></td>
                     <td><code>1.21.11-1.21.11.3</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Chop a whole tree by breaking a single log block</td>
                 </tr>
 
                 <tr data-name="forgeconfigapiport v21.11.1" data-req="library" data-side="server">
-                    <td class="mod-name"><strong>ForgeConfigAPIPort v21.11.1</strong></td>
+                    <td class="mod-name"><strong>ForgeConfigAPIPort v21.11.1</strong><span class="mob-desc">Ports Forge&#x27;s configuration API to Fabric</span></td>
                     <td><code>21.11.1-mc1.21.11-Fabric</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Ports Forge&#x27;s configuration API to Fabric</td>
                 </tr>
 
                 <tr data-name="incendium" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>Incendium</strong></td>
+                    <td class="mod-name"><strong>Incendium</strong><span class="mob-desc">Complete overhaul of Nether world generation with structures &amp; biomes</span></td>
                     <td><code>5.4.10</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Complete overhaul of Nether world generation with structures &amp; biomes</td>
                 </tr>
 
                 <tr data-name="moogsendstructures" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>MoogsEndStructures</strong></td>
+                    <td class="mod-name"><strong>MoogsEndStructures</strong><span class="mob-desc">Adds new structures to the End dimension</span></td>
                     <td><code>1.21-2.0.1</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adds new structures to the End dimension</td>
                 </tr>
 
                 <tr data-name="moogsmissingvillages" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>MoogsMissingVillages</strong></td>
+                    <td class="mod-name"><strong>MoogsMissingVillages</strong><span class="mob-desc">Adds village variants for biomes that lack them</span></td>
                     <td><code>1.21-2.0.0</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adds village variants for biomes that lack them</td>
                 </tr>
 
                 <tr data-name="moogsnetherstructures" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>MoogsNetherStructures</strong></td>
+                    <td class="mod-name"><strong>MoogsNetherStructures</strong><span class="mob-desc">Adds new structures to the Nether dimension</span></td>
                     <td><code>1.21-2.0.31</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adds new structures to the Nether dimension</td>
                 </tr>
 
                 <tr data-name="moogssoaringstructures" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>MoogsSoaringStructures</strong></td>
+                    <td class="mod-name"><strong>MoogsSoaringStructures</strong><span class="mob-desc">Adds floating/sky structures to the Overworld</span></td>
                     <td><code>1.21-2.0.2</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adds floating/sky structures to the Overworld</td>
                 </tr>
 
                 <tr data-name="moogstemplesreimagined" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>MoogsTemplesReimagined</strong></td>
+                    <td class="mod-name"><strong>MoogsTemplesReimagined</strong><span class="mob-desc">Revamps vanilla temple structures</span></td>
                     <td><code>1.21-1.1.0</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Revamps vanilla temple structures</td>
                 </tr>
 
                 <tr data-name="moogsvoyagerstructures" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>MoogsVoyagerStructures</strong></td>
+                    <td class="mod-name"><strong>MoogsVoyagerStructures</strong><span class="mob-desc">Adds exploration-focused structures across dimensions</span></td>
                     <td><code>1.21-5.0.5</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adds exploration-focused structures across dimensions</td>
                 </tr>
 
                 <tr data-name="no expensive" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>No Expensive</strong></td>
+                    <td class="mod-name"><strong>No Expensive</strong><span class="mob-desc">Removes the &#x27;Too Expensive&#x27; anvil cap</span></td>
                     <td><code>1.10.2</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Removes the &#x27;Too Expensive&#x27; anvil cap</td>
                 </tr>
 
                 <tr data-name="origins: legacy" data-req="required" data-side="both">
-                    <td class="mod-name"><strong>Origins: Legacy</strong></td>
+                    <td class="mod-name"><strong>Origins: Legacy</strong><span class="mob-desc">Choose an Origin at the start that gives unique abilities &amp; weaknesses</span></td>
                     <td><code>1.11.4+1.21.11</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Choose an Origin at the start that gives unique abilities &amp; weaknesses</td>
                 </tr>
 
                 <tr data-name="structory" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>Structory</strong></td>
+                    <td class="mod-name"><strong>Structory</strong><span class="mob-desc">Adds small vanilla-style structures and ruins to the world</span></td>
                     <td><code>1.3.14</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adds small vanilla-style structures and ruins to the world</td>
                 </tr>
 
                 <tr data-name="structory towers" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>Structory Towers</strong></td>
+                    <td class="mod-name"><strong>Structory Towers</strong><span class="mob-desc">Adds tower structures as an expansion to Structory</span></td>
                     <td><code>1.0.15</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adds tower structures as an expansion to Structory</td>
                 </tr>
 
                 <tr data-name="choicetheorem&#x27;s overhauled village" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>ChoiceTheorem&#x27;s Overhauled Village</strong></td>
+                    <td class="mod-name"><strong>ChoiceTheorem&#x27;s Overhauled Village</strong><span class="mob-desc">Overhauls villages with new designs for every biome</span></td>
                     <td><code>3.6.1a</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Overhauls villages with new designs for every biome</td>
                 </tr>
 
                 <tr data-name="abridged" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>abridged</strong></td>
+                    <td class="mod-name"><strong>abridged</strong><span class="mob-desc">Shortens &amp; cleans up server join/leave messages</span></td>
                     <td><code>2.0.0-fabric-1.21.11</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Shortens &amp; cleans up server join/leave messages</td>
                 </tr>
 
                 <tr data-name="alternate current" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>alternate current</strong></td>
+                    <td class="mod-name"><strong>alternate current</strong><span class="mob-desc">Efficient redstone dust implementation for better server performance</span></td>
                     <td><code>1.21.11-1.9.0</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Efficient redstone dust implementation for better server performance</td>
                 </tr>
 
                 <tr data-name="antixray" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>antixray</strong></td>
+                    <td class="mod-name"><strong>antixray</strong><span class="mob-desc">Hides ores from X-ray texture packs / cheats</span></td>
                     <td><code>1.4.13+1.21.11</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Hides ores from X-ray texture packs / cheats</td>
                 </tr>
 
                 <tr data-name="balm" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>balm</strong></td>
+                    <td class="mod-name"><strong>balm</strong><span class="mob-desc">Abstraction layer / library used by BlayMappings mods (Waystones, etc.)</span></td>
                     <td><code>1.21.11-21.11.6</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Abstraction layer / library used by BlayMappings mods (Waystones, etc.)</td>
                 </tr>
 
                 <tr data-name="beacon range extender" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>Beacon Range Extender</strong></td>
+                    <td class="mod-name"><strong>Beacon Range Extender</strong><span class="mob-desc">Increases the effective range of beacon effects</span></td>
                     <td><code>1.4.0</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Increases the effective range of beacon effects</td>
                 </tr>
 
                 <tr data-name="brewery" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>brewery</strong></td>
+                    <td class="mod-name"><strong>brewery</strong><span class="mob-desc">Adds an alcohol brewing system with cauldrons, barrels, and aging</span></td>
                     <td><code>0.14.0+1.21.11-rc2</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adds an alcohol brewing system with cauldrons, barrels, and aging</td>
                 </tr>
 
                 <tr data-name="c2me" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>c2me</strong></td>
+                    <td class="mod-name"><strong>c2me</strong><span class="mob-desc">Concurrent Chunk Management Engine — multi-threaded chunk loading</span></td>
                     <td><code>1.21.11-0.3.6.0.0</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Concurrent Chunk Management Engine — multi-threaded chunk loading</td>
                 </tr>
 
                 <tr data-name="carryon" data-req="optional" data-side="both">
-                    <td class="mod-name"><strong>carryon</strong></td>
+                    <td class="mod-name"><strong>carryon</strong><span class="mob-desc">Lets you pick up and carry tile-entities and mobs</span></td>
                     <td><code>1.21.11-2.9.0</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Lets you pick up and carry tile-entities and mobs</td>
                 </tr>
 
                 <tr data-name="chestprotection" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>chestprotection</strong></td>
+                    <td class="mod-name"><strong>chestprotection</strong><span class="mob-desc">Protects chests from being opened/broken by non-owners</span></td>
                     <td><code>1.1.3</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Protects chests from being opened/broken by non-owners</td>
                 </tr>
 
                 <tr data-name="chunkloaders" data-req="optional" data-side="both">
-                    <td class="mod-name"><strong>chunkloaders</strong></td>
+                    <td class="mod-name"><strong>chunkloaders</strong><span class="mob-desc">Adds blocks that keep chunks loaded when you are away</span></td>
                     <td><code>1.2.9-fabric-mc1.21.11</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Adds blocks that keep chunks loaded when you are away</td>
                 </tr>
 
                 <tr data-name="cloth config" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>cloth config</strong></td>
+                    <td class="mod-name"><strong>cloth config</strong><span class="mob-desc">Configuration screen library used by many mods</span></td>
                     <td><code>21.11.153-fabric</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Configuration screen library used by many mods</td>
                 </tr>
 
                 <tr data-name="cobweb" data-req="library" data-side="server">
-                    <td class="mod-name"><strong>cobweb</strong></td>
+                    <td class="mod-name"><strong>cobweb</strong><span class="mob-desc">Library for mod configuration and utilities</span></td>
                     <td><code>1.21.11-1.4.0</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Library for mod configuration and utilities</td>
                 </tr>
 
                 <tr data-name="collective" data-req="library" data-side="server">
-                    <td class="mod-name"><strong>collective</strong></td>
+                    <td class="mod-name"><strong>collective</strong><span class="mob-desc">Shared library for Serilum&#x27;s mods</span></td>
                     <td><code>1.21.11-8.13</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Shared library for Serilum&#x27;s mods</td>
                 </tr>
 
                 <tr data-name="config backuper" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>config backuper</strong></td>
+                    <td class="mod-name"><strong>config backuper</strong><span class="mob-desc">Automatically backs up server config files</span></td>
                     <td><code>1.21-1.0.1</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Automatically backs up server config files</td>
                 </tr>
 
                 <tr data-name="cristellib" data-req="library" data-side="server">
-                    <td class="mod-name"><strong>cristellib</strong></td>
+                    <td class="mod-name"><strong>cristellib</strong><span class="mob-desc">Library for Cristel&#x27;s mods (CTOV, etc.)</span></td>
                     <td><code>1.21.11-3.0.4</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Library for Cristel&#x27;s mods (CTOV, etc.)</td>
                 </tr>
 
                 <tr data-name="dungeons and taverns v5.1.0" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>dungeons and taverns v5.1.0</strong></td>
+                    <td class="mod-name"><strong>dungeons and taverns v5.1.0</strong><span class="mob-desc">Adds dungeon and tavern structures to world generation</span></td>
                     <td><code>5.1.0</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adds dungeon and tavern structures to world generation</td>
                 </tr>
 
                 <tr data-name="easyauth" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>easyauth</strong></td>
+                    <td class="mod-name"><strong>easyauth</strong><span class="mob-desc">Server-side authentication system (login/register)</span></td>
                     <td><code>1.21.11-3.4.1</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Server-side authentication system (login/register)</td>
                 </tr>
 
                 <tr data-name="fabric api" data-req="required" data-side="both">
-                    <td class="mod-name"><strong>fabric api</strong></td>
+                    <td class="mod-name"><strong>fabric api</strong><span class="mob-desc">Essential hooks and interoperability layer for Fabric mods</span></td>
                     <td><code>0.141.2+1.21.11</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Essential hooks and interoperability layer for Fabric mods</td>
                 </tr>
 
                 <tr data-name="fabric language kotlin" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>fabric language kotlin</strong></td>
+                    <td class="mod-name"><strong>fabric language kotlin</strong><span class="mob-desc">Enables mods written in Kotlin on Fabric</span></td>
                     <td><code>1.13.9+kotlin.2.3.10</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Enables mods written in Kotlin on Fabric</td>
                 </tr>
 
                 <tr data-name="fastback" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>fastback</strong></td>
+                    <td class="mod-name"><strong>fastback</strong><span class="mob-desc">Server-side world backup manager using git-based snapshots</span></td>
                     <td><code>0.30.0+1.21.11-fabric</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Server-side world backup manager using git-based snapshots</td>
                 </tr>
 
                 <tr data-name="ferritecore" data-req="required" data-side="both">
-                    <td class="mod-name"><strong>ferritecore</strong></td>
+                    <td class="mod-name"><strong>ferritecore</strong><span class="mob-desc">Reduces RAM usage through memory optimisations</span></td>
                     <td><code>8.2.0-fabric</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Reduces RAM usage through memory optimisations</td>
                 </tr>
 
                 <tr data-name="harvest with ease" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>harvest with ease</strong></td>
+                    <td class="mod-name"><strong>harvest with ease</strong><span class="mob-desc">Right-click crops to harvest and auto-replant</span></td>
                     <td><code>1.21.11-9.4.0</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Right-click crops to harvest and auto-replant</td>
                 </tr>
 
                 <tr data-name="jei" data-req="optional" data-side="both">
-                    <td class="mod-name"><strong>jei</strong></td>
+                    <td class="mod-name"><strong>jei</strong><span class="mob-desc">Item and recipe browser / lookup GUI</span></td>
                     <td><code>1.21.11-fabric-27.4.0.15</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Item and recipe browser / lookup GUI</td>
                 </tr>
 
                 <tr data-name="krypton" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>krypton</strong></td>
+                    <td class="mod-name"><strong>krypton</strong><span class="mob-desc">Optimises Minecraft networking stack for better performance</span></td>
                     <td><code>0.2.10</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Optimises Minecraft networking stack for better performance</td>
                 </tr>
 
                 <tr data-name="lithium" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>lithium</strong></td>
+                    <td class="mod-name"><strong>lithium</strong><span class="mob-desc">General-purpose server optimisation mod (game logic, AI, etc.)</span></td>
                     <td><code>0.21.3+mc1.21.11</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">General-purpose server optimisation mod (game logic, AI, etc.)</td>
                 </tr>
 
                 <tr data-name="lithostitched" data-req="library" data-side="server">
-                    <td class="mod-name"><strong>lithostitched</strong></td>
+                    <td class="mod-name"><strong>lithostitched</strong><span class="mob-desc">Library for data-driven worldgen stitching</span></td>
                     <td><code>1.5.8+beta1-fabric-1.21.11</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Library for data-driven worldgen stitching</td>
                 </tr>
 
                 <tr data-name="lootr" data-req="required" data-side="both">
-                    <td class="mod-name"><strong>lootr</strong></td>
+                    <td class="mod-name"><strong>lootr</strong><span class="mob-desc">Makes loot containers per-player so everyone gets their own loot</span></td>
                     <td><code>1.21.11-1.19.33.100</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Makes loot containers per-player so everyone gets their own loot</td>
                 </tr>
 
                 <tr data-name="moogs structure lib" data-req="library" data-side="server">
-                    <td class="mod-name"><strong>moogs structure lib</strong></td>
+                    <td class="mod-name"><strong>moogs structure lib</strong><span class="mob-desc">Library used by all Moogs structure mods</span></td>
                     <td><code>1.1.0-1.21.11-fabric</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Library used by all Moogs structure mods</td>
                 </tr>
 
                 <tr data-name="packetfixer" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>packetfixer</strong></td>
+                    <td class="mod-name"><strong>packetfixer</strong><span class="mob-desc">Fixes packet size issues to prevent disconnects</span></td>
                     <td><code>3.3.4-1.21.11</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Fixes packet size issues to prevent disconnects</td>
                 </tr>
 
                 <tr data-name="polymer bundled" data-req="library" data-side="server">
-                    <td class="mod-name"><strong>polymer bundled</strong></td>
+                    <td class="mod-name"><strong>polymer bundled</strong><span class="mob-desc">Server-side mod framework — lets server mods work without client mods</span></td>
                     <td><code>0.15.2+1.21.11</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Server-side mod framework — lets server mods work without client mods</td>
                 </tr>
 
                 <tr data-name="promenade" data-req="required" data-side="both">
-                    <td class="mod-name"><strong>promenade</strong></td>
+                    <td class="mod-name"><strong>promenade</strong><span class="mob-desc">Adds new biomes, mobs, and building blocks to world generation</span></td>
                     <td><code>5.4.0</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Adds new biomes, mobs, and building blocks to world generation</td>
                 </tr>
 
                 <tr data-name="skinrestorer" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>skinrestorer</strong></td>
+                    <td class="mod-name"><strong>skinrestorer</strong><span class="mob-desc">Restores player skins on offline/hybrid servers</span></td>
                     <td><code>2.5.0+1.21.11-fabric</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Restores player skins on offline/hybrid servers</td>
                 </tr>
 
                 <tr data-name="spark" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>spark</strong></td>
+                    <td class="mod-name"><strong>spark</strong><span class="mob-desc">Performance profiler and monitoring tool</span></td>
                     <td><code>1.10.156-fabric</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Performance profiler and monitoring tool</td>
                 </tr>
 
                 <tr data-name="sparsestructures" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>sparsestructures</strong></td>
+                    <td class="mod-name"><strong>sparsestructures</strong><span class="mob-desc">Adjusts vanilla structure spacing to reduce clustering</span></td>
                     <td><code>1.21.11-3.1.1</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adjusts vanilla structure spacing to reduce clustering</td>
                 </tr>
 
                 <tr data-name="supermartijn642&#x27;s config lib" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>SuperMartijn642&#x27;s Config Lib</strong></td>
+                    <td class="mod-name"><strong>SuperMartijn642&#x27;s Config Lib</strong><span class="mob-desc">Configuration library for SuperMartijn642&#x27;s mods</span></td>
                     <td><code>1.1.8</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Configuration library for SuperMartijn642&#x27;s mods</td>
                 </tr>
 
                 <tr data-name="supermartijn642&#x27;s core lib" data-req="library" data-side="both">
-                    <td class="mod-name"><strong>SuperMartijn642&#x27;s Core Lib</strong></td>
+                    <td class="mod-name"><strong>SuperMartijn642&#x27;s Core Lib</strong><span class="mob-desc">Core library for SuperMartijn642&#x27;s mods</span></td>
                     <td><code>1.1.20</code></td>
-                    <td><span class="badge lib">Library</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge lib">Library</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Core library for SuperMartijn642&#x27;s mods</td>
                 </tr>
 
                 <tr data-name="towns and towers" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>Towns and Towers</strong></td>
+                    <td class="mod-name"><strong>Towns and Towers</strong><span class="mob-desc">Adds pillager outpost and village structure variants</span></td>
                     <td><code>1.13.8</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Adds pillager outpost and village structure variants</td>
                 </tr>
 
                 <tr data-name="tectonic" data-req="required" data-side="server">
-                    <td class="mod-name"><strong>tectonic</strong></td>
+                    <td class="mod-name"><strong>tectonic</strong><span class="mob-desc">Overhauls terrain generation with dramatic landscapes</span></td>
                     <td><code>3.0.19-fabric-1.21.11</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Overhauls terrain generation with dramatic landscapes</td>
                 </tr>
 
                 <tr data-name="villagernames" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>villagernames</strong></td>
+                    <td class="mod-name"><strong>villagernames</strong><span class="mob-desc">Gives villagers random human names</span></td>
                     <td><code>1.21.11-8.3</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">Gives villagers random human names</td>
                 </tr>
 
                 <tr data-name="waystones" data-req="required" data-side="both">
-                    <td class="mod-name"><strong>waystones</strong></td>
+                    <td class="mod-name"><strong>waystones</strong><span class="mob-desc">Adds waystones for fast-travel teleportation between locations</span></td>
                     <td><code>1.21.11-21.11.4</code></td>
-                    <td><span class="badge req">Required</span></td>
-                    <td><span class="badge side-both">Both</span></td>
+                    <td class="col-req"><span class="badge req">Required</span></td>
+                    <td class="col-side"><span class="badge side-both">Both</span></td>
                     <td class="mod-desc">Adds waystones for fast-travel teleportation between locations</td>
                 </tr>
 
                 <tr data-name="worldedit mod" data-req="optional" data-side="server">
-                    <td class="mod-name"><strong>worldedit mod</strong></td>
+                    <td class="mod-name"><strong>worldedit mod</strong><span class="mob-desc">In-game map editor for large-scale building and terraforming</span></td>
                     <td><code>7.4.0</code></td>
-                    <td><span class="badge opt">Optional</span></td>
-                    <td><span class="badge side-server">Server</span></td>
+                    <td class="col-req"><span class="badge opt">Optional</span></td>
+                    <td class="col-side"><span class="badge side-server">Server</span></td>
                     <td class="mod-desc">In-game map editor for large-scale building and terraforming</td>
                 </tr>
                 </tbody>
@@ -12784,7 +12789,7 @@ varLong=10
                         <code class="config-path">skinrestorer/mojang_profile_cache.json</code>
                     </div>
                     <div class="config-content">
-                        <pre><code>[{&quot;uuid&quot;:&quot;0b313dde-0b37-45dc-8142-4224414dcdc0&quot;,&quot;name&quot;:&quot;AtxmX&quot;,&quot;expiresOn&quot;:&quot;2026-03-20 23:25:19 +0530&quot;},{&quot;uuid&quot;:&quot;81a13053-d44c-43d7-9398-0b28f0543332&quot;,&quot;name&quot;:&quot;ankitaw&quot;,&quot;expiresOn&quot;:&quot;2026-03-07 01:51:49 +0530&quot;},{&quot;uuid&quot;:&quot;80465ad1-3174-452e-8586-0df4540b51c9&quot;,&quot;name&quot;:&quot;CherryMama&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 08:51:40 +0530&quot;},{&quot;uuid&quot;:&quot;8496f2bf-8888-4aed-b18a-bad13a6e9792&quot;,&quot;name&quot;:&quot;pilidium&quot;,&quot;expiresOn&quot;:&quot;2026-03-08 10:15:57 +0530&quot;},{&quot;uuid&quot;:&quot;0e55bfc9-fc36-4377-ba80-b0c2247257c8&quot;,&quot;name&quot;:&quot;bred101&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 22:30:35 +0530&quot;},{&quot;uuid&quot;:&quot;0ca9ea18-16b9-4e64-914e-366ff0fbc65d&quot;,&quot;name&quot;:&quot;ZeusOlympian116&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 18:15:16 +0530&quot;},{&quot;uuid&quot;:&quot;5b33b823-69d0-4cf9-8976-ef305da592bf&quot;,&quot;name&quot;:&quot;idkimmercury&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 18:07:49 +0530&quot;},{&quot;uuid&quot;:&quot;6b236703-8c5e-438f-a742-7b5df7aa4334&quot;,&quot;name&quot;:&quot;xinertia13&quot;,&quot;expiresOn&quot;:&quot;2026-03-14 17:48:06 +0530&quot;},{&quot;uuid&quot;:&quot;a2ed0672-1dd6-40ad-b108-42370338421d&quot;,&quot;name&quot;:&quot;_AR5&quot;,&quot;expiresOn&quot;:&quot;2026-03-07 09:13:48 +0530&quot;},{&quot;uuid&quot;:&quot;d854506a-f090-48a2-b817-d375b02c72a2&quot;,&quot;name&quot;:&quot;Ankit_&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 12:11:20 +0530&quot;},{&quot;uuid&quot;:&quot;5c1329a8-8812-40d7-972c-f76c073dfdb8&quot;,&quot;name&quot;:&quot;Moukthik&quot;,&quot;expiresOn&quot;:&quot;2026-03-12 16:37:11 +0530&quot;},{&quot;uuid&quot;:&quot;bdeeb0fd-e449-4b3b-a3e1-1a9ec6584a7a&quot;,&quot;name&quot;:&quot;KALXIUM&quot;,&quot;expiresOn&quot;:&quot;2026-03-07 07:19:01 +0530&quot;},{&quot;uuid&quot;:&quot;63978e90-7d88-4f1c-a287-0c523952510a&quot;,&quot;name&quot;:&quot;Kneeger&quot;,&quot;expiresOn&quot;:&quot;2026-03-19 22:58:29 +0530&quot;},{&quot;uuid&quot;:&quot;db3eb6d8-09dd-43c8-b458-177940a6e23c&quot;,&quot;name&quot;:&quot;Himmelsauge&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 07:24:03 +0530&quot;},{&quot;uuid&quot;:&quot;7b81ab49-70ba-4efd-b8dd-421cab09aac2&quot;,&quot;name&quot;:&quot;Atom&quot;,&quot;expiresOn&quot;:&quot;2026-03-05 19:51:13 +0530&quot;},{&quot;uuid&quot;:&quot;1a6ae357-0d6d-4e2b-9d7e-90bc07f0afb2&quot;,&quot;name&quot;:&quot;Iamherebud&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 16:16:57 +0530&quot;},{&quot;uuid&quot;:&quot;c421eded-4f36-4d96-afff-3b14bcfdf800&quot;,&quot;name&quot;:&quot;Amazchild&quot;,&quot;expiresOn&quot;:&quot;2026-03-07 23:14:10 +0530&quot;},{&quot;uuid&quot;:&quot;ffe1fe4b-6e9b-4e92-8e58-136db53cdbc1&quot;,&quot;name&quot;:&quot;Mortal9429&quot;,&quot;expiresOn&quot;:&quot;2026-03-05 22:18:07 +0530&quot;},{&quot;uuid&quot;:&quot;efd39301-cbb8-4cc0-ac81-58717ff67945&quot;,&quot;name&quot;:&quot;Whiskey&quot;,&quot;expiresOn&quot;:&quot;2026-03-19 23:49:52 +0530&quot;},{&quot;uuid&quot;:&quot;11c2b274-2cbe-4ad1-9fbc-18835b893ad8&quot;,&quot;name&quot;:&quot;Fluorite&quot;,&quot;expiresOn&quot;:&quot;2026-03-19 22:04:09 +0530&quot;},{&quot;uuid&quot;:&quot;d30e6d38-7fcf-4c97-9f8e-bf27c01bcd66&quot;,&quot;name&quot;:&quot;usera&quot;,&quot;expiresOn&quot;:&quot;2026-03-19 18:15:35 +0530&quot;},{&quot;uuid&quot;:&quot;4e404d9c-f4b2-48c4-bc02-1230b9a89c23&quot;,&quot;name&quot;:&quot;SarDev&quot;,&quot;expiresOn&quot;:&quot;2026-03-17 00:01:12 +0530&quot;},{&quot;uuid&quot;:&quot;efa48ea6-14c8-4d4a-8aa9-5bc9384975fd&quot;,&quot;name&quot;:&quot;ALYXIZ&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 18:00:59 +0530&quot;},{&quot;uuid&quot;:&quot;5196a56f-9c99-41d8-b89a-6ae1d3977b5c&quot;,&quot;name&quot;:&quot;NightHunter_02&quot;,&quot;expiresOn&quot;:&quot;2026-03-16 12:25:04 +0530&quot;},{&quot;uuid&quot;:&quot;ff5cd608-e7f0-4c38-b71a-4af2fd7dce53&quot;,&quot;name&quot;:&quot;twodee2DD&quot;,&quot;expiresOn&quot;:&quot;2026-03-06 20:52:22 +0530&quot;},{&quot;uuid&quot;:&quot;2fab6282-1cb7-4f17-a02c-8b5a64150fd8&quot;,&quot;name&quot;:&quot;Dristro&quot;,&quot;expiresOn&quot;:&quot;2026-03-07 15:53:03 +0530&quot;},{&quot;uuid&quot;:&quot;5b54610e-6673-48a9-995a-9fcded973e9b&quot;,&quot;name&quot;:&quot;aviatorgator&quot;,&quot;expiresOn&quot;:&quot;2026-03-08 00:25:02 +0530&quot;},{&quot;uuid&quot;:&quot;ebf13069-b121-4749-b53f-87fa864df0e5&quot;,&quot;name&quot;:&quot;NameAlreadyTaken&quot;,&quot;expiresOn&quot;:&quot;2026-03-11 20:48:55 +0530&quot;},{&quot;uuid&quot;:&quot;bbe4f356-048f-4aba-b673-0a9a3bcd0229&quot;,&quot;name&quot;:&quot;prosmuggler&quot;,&quot;expiresOn&quot;:&quot;2026-03-04 10:10:48 +0530&quot;},{&quot;uuid&quot;:&quot;a4406c43-ebcc-4c35-90df-3a546111d008&quot;,&quot;name&quot;:&quot;basantiiii&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 08:49:24 +0530&quot;}]</code></pre>
+                        <pre><code>[{&quot;uuid&quot;:&quot;47a2e70a-5b25-4295-b454-fda322d962a0&quot;,&quot;name&quot;:&quot;skittlllle&quot;,&quot;expiresOn&quot;:&quot;2026-03-22 17:57:06 +0530&quot;},{&quot;uuid&quot;:&quot;d854506a-f090-48a2-b817-d375b02c72a2&quot;,&quot;name&quot;:&quot;Ankit_&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 12:11:20 +0530&quot;},{&quot;uuid&quot;:&quot;5c1329a8-8812-40d7-972c-f76c073dfdb8&quot;,&quot;name&quot;:&quot;Moukthik&quot;,&quot;expiresOn&quot;:&quot;2026-03-12 16:37:11 +0530&quot;},{&quot;uuid&quot;:&quot;c421eded-4f36-4d96-afff-3b14bcfdf800&quot;,&quot;name&quot;:&quot;Amazchild&quot;,&quot;expiresOn&quot;:&quot;2026-03-07 23:14:10 +0530&quot;},{&quot;uuid&quot;:&quot;0b313dde-0b37-45dc-8142-4224414dcdc0&quot;,&quot;name&quot;:&quot;AtxmX&quot;,&quot;expiresOn&quot;:&quot;2026-03-20 23:25:19 +0530&quot;},{&quot;uuid&quot;:&quot;0e55bfc9-fc36-4377-ba80-b0c2247257c8&quot;,&quot;name&quot;:&quot;bred101&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 22:30:35 +0530&quot;},{&quot;uuid&quot;:&quot;8496f2bf-8888-4aed-b18a-bad13a6e9792&quot;,&quot;name&quot;:&quot;pilidium&quot;,&quot;expiresOn&quot;:&quot;2026-03-08 10:15:57 +0530&quot;},{&quot;uuid&quot;:&quot;1a6ae357-0d6d-4e2b-9d7e-90bc07f0afb2&quot;,&quot;name&quot;:&quot;Iamherebud&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 16:16:57 +0530&quot;},{&quot;uuid&quot;:&quot;80465ad1-3174-452e-8586-0df4540b51c9&quot;,&quot;name&quot;:&quot;CherryMama&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 08:51:40 +0530&quot;},{&quot;uuid&quot;:&quot;81a13053-d44c-43d7-9398-0b28f0543332&quot;,&quot;name&quot;:&quot;ankitaw&quot;,&quot;expiresOn&quot;:&quot;2026-03-07 01:51:49 +0530&quot;},{&quot;uuid&quot;:&quot;0ca9ea18-16b9-4e64-914e-366ff0fbc65d&quot;,&quot;name&quot;:&quot;ZeusOlympian116&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 18:15:16 +0530&quot;},{&quot;uuid&quot;:&quot;5b33b823-69d0-4cf9-8976-ef305da592bf&quot;,&quot;name&quot;:&quot;idkimmercury&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 18:07:49 +0530&quot;},{&quot;uuid&quot;:&quot;6b236703-8c5e-438f-a742-7b5df7aa4334&quot;,&quot;name&quot;:&quot;xinertia13&quot;,&quot;expiresOn&quot;:&quot;2026-03-14 17:48:06 +0530&quot;},{&quot;uuid&quot;:&quot;a2ed0672-1dd6-40ad-b108-42370338421d&quot;,&quot;name&quot;:&quot;_AR5&quot;,&quot;expiresOn&quot;:&quot;2026-03-07 09:13:48 +0530&quot;},{&quot;uuid&quot;:&quot;bdeeb0fd-e449-4b3b-a3e1-1a9ec6584a7a&quot;,&quot;name&quot;:&quot;KALXIUM&quot;,&quot;expiresOn&quot;:&quot;2026-03-07 07:19:01 +0530&quot;},{&quot;uuid&quot;:&quot;63978e90-7d88-4f1c-a287-0c523952510a&quot;,&quot;name&quot;:&quot;Kneeger&quot;,&quot;expiresOn&quot;:&quot;2026-03-19 22:58:29 +0530&quot;},{&quot;uuid&quot;:&quot;db3eb6d8-09dd-43c8-b458-177940a6e23c&quot;,&quot;name&quot;:&quot;Himmelsauge&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 07:24:03 +0530&quot;},{&quot;uuid&quot;:&quot;7b81ab49-70ba-4efd-b8dd-421cab09aac2&quot;,&quot;name&quot;:&quot;Atom&quot;,&quot;expiresOn&quot;:&quot;2026-03-05 19:51:13 +0530&quot;},{&quot;uuid&quot;:&quot;ffe1fe4b-6e9b-4e92-8e58-136db53cdbc1&quot;,&quot;name&quot;:&quot;Mortal9429&quot;,&quot;expiresOn&quot;:&quot;2026-03-05 22:18:07 +0530&quot;},{&quot;uuid&quot;:&quot;efd39301-cbb8-4cc0-ac81-58717ff67945&quot;,&quot;name&quot;:&quot;Whiskey&quot;,&quot;expiresOn&quot;:&quot;2026-03-19 23:49:52 +0530&quot;},{&quot;uuid&quot;:&quot;11c2b274-2cbe-4ad1-9fbc-18835b893ad8&quot;,&quot;name&quot;:&quot;Fluorite&quot;,&quot;expiresOn&quot;:&quot;2026-03-19 22:04:09 +0530&quot;},{&quot;uuid&quot;:&quot;d30e6d38-7fcf-4c97-9f8e-bf27c01bcd66&quot;,&quot;name&quot;:&quot;usera&quot;,&quot;expiresOn&quot;:&quot;2026-03-19 18:15:35 +0530&quot;},{&quot;uuid&quot;:&quot;4e404d9c-f4b2-48c4-bc02-1230b9a89c23&quot;,&quot;name&quot;:&quot;SarDev&quot;,&quot;expiresOn&quot;:&quot;2026-03-17 00:01:12 +0530&quot;},{&quot;uuid&quot;:&quot;efa48ea6-14c8-4d4a-8aa9-5bc9384975fd&quot;,&quot;name&quot;:&quot;ALYXIZ&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 18:00:59 +0530&quot;},{&quot;uuid&quot;:&quot;5196a56f-9c99-41d8-b89a-6ae1d3977b5c&quot;,&quot;name&quot;:&quot;NightHunter_02&quot;,&quot;expiresOn&quot;:&quot;2026-03-16 12:25:04 +0530&quot;},{&quot;uuid&quot;:&quot;ff5cd608-e7f0-4c38-b71a-4af2fd7dce53&quot;,&quot;name&quot;:&quot;twodee2DD&quot;,&quot;expiresOn&quot;:&quot;2026-03-06 20:52:22 +0530&quot;},{&quot;uuid&quot;:&quot;2fab6282-1cb7-4f17-a02c-8b5a64150fd8&quot;,&quot;name&quot;:&quot;Dristro&quot;,&quot;expiresOn&quot;:&quot;2026-03-07 15:53:03 +0530&quot;},{&quot;uuid&quot;:&quot;5b54610e-6673-48a9-995a-9fcded973e9b&quot;,&quot;name&quot;:&quot;aviatorgator&quot;,&quot;expiresOn&quot;:&quot;2026-03-08 00:25:02 +0530&quot;},{&quot;uuid&quot;:&quot;ebf13069-b121-4749-b53f-87fa864df0e5&quot;,&quot;name&quot;:&quot;NameAlreadyTaken&quot;,&quot;expiresOn&quot;:&quot;2026-03-11 20:48:55 +0530&quot;},{&quot;uuid&quot;:&quot;bbe4f356-048f-4aba-b673-0a9a3bcd0229&quot;,&quot;name&quot;:&quot;prosmuggler&quot;,&quot;expiresOn&quot;:&quot;2026-03-04 10:10:48 +0530&quot;},{&quot;uuid&quot;:&quot;a4406c43-ebcc-4c35-90df-3a546111d008&quot;,&quot;name&quot;:&quot;basantiiii&quot;,&quot;expiresOn&quot;:&quot;2026-03-03 08:49:24 +0530&quot;}]</code></pre>
                     </div>
                 </div>
 
@@ -12859,10 +12864,10 @@ tl;dr: spark uses this folder to store some temporary data.
                     <div class="config-header" onclick="this.parentElement.classList.toggle('open')">
                         <span class="config-chevron">&#9654;</span>
                         <strong>Spark</strong>
-                        <code class="config-path">spark/tmp/spark-243d73817b8a2-profile-data.jfr.tmp</code>
+                        <code class="config-path">spark/tmp/spark-244ee9dd3fa3f-profile-data.jfr.tmp</code>
                     </div>
                     <div class="config-content">
-                        <pre><code>FLR        @                   ����&amp;�         C�8$Š    ;��    �Ȁ�  ������� ����� rootmetadataclassbooleanname4idchar5float6double7byte8short9int10long11java.lang.String20java.lang.Class21
+                        <pre><code>FLR        @                   ���=��h         D��њ    ;��    �Ȁ�  ����靑 ����� rootmetadataclassbooleanname4idchar5float6double7byte8short9int10long11java.lang.String20java.lang.Class21
 annotation201
 Java ClassvaluefieldclassLoader23trueconstantPoolClass Loader31Namepackage30Package	modifiersAccess Modifiersjava.lang.Thread22ThreadosNameOS Thread Name
 osThreadIdOS Thread IdjavaNameJava Thread NamejavaThreadIdJava Thread Idjdk.types.ClassLoaderJava Class LoadertypeTypejdk.types.FrameType24
@@ -12904,15 +12909,15 @@ Percentageregionen_USlocale0	gmtOffset  7 	 
         &quot;!# $&quot;!% &amp;&#x27;&quot;!( )* +,- ./ 01 23 45 6 7 8&quot;!9 $&quot;!% :;&lt;!= &gt;? @A&lt;!B % CDE FG HIKJL MINO&quot;!P QR ST 8;&quot;!U VOP 8&quot;!9 $&quot;!% W$&quot;!X )* YZ [\]^ _ ` ab _ ` cd _ ef gh _ ` ij _ ef k&#x27;( $&quot;!% l$&lt;!m no pq&lt;!r st uv&lt;!w % xy&lt;!z % {|~} ����� �� �� �,&quot;!- �D&quot;!� �A&quot;!� ��~}� ��� �� �� �,&quot;!� �D&quot;!� �&quot;!� �� _ ef �� _ ef ��~}� ��� �� �� �,&quot;!� �D&quot;!� �&quot;!� �� _ ef ��~}	� ��� �� �� �� �� �,&quot;!� �D&quot;!� �&quot;!� �,&quot;!� �� _ ` ��~}
 � ��� �� �� �� �� �,&quot;!� �D&quot;!� �&quot;!� �� �� �� �� �� _ ` ��~}� ����� �� �� �� � �� � �� � ��~}
 � ��� �� �� � % �� �� �� �� _ ef �� �� �� �� ��~}� ��� �� �� � � � ��~}� ��� �� �� �� ��~}� ����� �� �� �9 &gt;? �� _ �� _ �� _ ��~}
-� ��� �� �� �� �� �� �� �� �� �� �� ��~}� ��� �� �� �� � ��~}� ����� �� �� % �� _ ` �� _ ` ��~}� ������� �� �� �� _ sq&quot;!t �\� �� _ ef ��~}� ����� �� �� �� �� �,&quot;!� �D&quot;!� NO&quot;!� ��~}� ��� �� �� �v&quot;!� �� ��~}� ��� �� �� �� �� �,&quot;!� ��~}� ��� �� �� �,&quot;!� �D&quot;!� �&quot;!� �� _ ef �� �� ��~}� ����� �� �� �,&quot;!- �D&quot;!� �A&quot;!� �� _ ��~}� ����� �� �� �,&quot;!� �D&quot;!� �� _ ` �� _ ef ��~}� ����� �� �� �,&quot;!� �D&quot;!� �� _ ` ��~}� ��� �� �� �,&quot;!� 8y&quot;!� �� ��~}� ����� �� �� �� _ �� _ � �� �� _ �� �� �� �� �� �� � �� _ �� _ ef �� _ ef �� _ ef �� _ ef �� _ ef �� _ �� _ �� _ ef �� _ ef �~� ��~�KJ ��~�� ��~�� �  ��~�� �  �e~�� �  �`~�� � �_~�� � ��~�� � ����� Nk�������async-profiler 4.2.1async-profiler.jfr�������� �����3������������ l�������kversion4.2.1���� l�������kenginewall���� l�������kcstackvm���� l�������kclock	monotonic���� l�������keventwall���� l�������kfilter ���� l�������kbegin ���� l�������kend ���� l�������kjstackdepth2048���� l�������kjfropts0���� l�������k	chunksize	104857600���� l�������k	chunktime3600񀀀 l�������kfeaturesVunknown_java unwind_stub unwind_comp unwind_native java_anchor gc_traces - - - - - - -���� l�������eenabledtrue���� l�������einterval10000000���� l�������ealluserfalse���� l�������fenabledfalse���� l�������genabledfalse���� l�������henabledfalse���� l�������ienabledfalse���� l�������senabledfalse���� l�������{enabledfalse���� l�������kdebugSymbolstrue���� l�������k
-kernelSymbolsfalse���� m�������funame: Linux 6.17.0-14-generic #14~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Jan 15 15:52:10 UTC 2 x86_64� n�������x86_64�processor	: 0
+� ��� �� �� �� �� �� �� �� �� �� �� ��~}� ��� �� �� �� � ��~}� ����� �� �� % �� _ ` �� _ ` ��~}� ������� �� �� �� _ sq&quot;!t �\� �� _ ef ��~}� ����� �� �� �� �� �,&quot;!� �D&quot;!� NO&quot;!� ��~}� ��� �� �� �v&quot;!� �� ��~}� ��� �� �� �� �� �,&quot;!� ��~}� ��� �� �� �,&quot;!� �D&quot;!� �&quot;!� �� _ ef �� �� ��~}� ����� �� �� �,&quot;!- �D&quot;!� �A&quot;!� �� _ ��~}� ����� �� �� �,&quot;!� �D&quot;!� �� _ ` �� _ ef ��~}� ����� �� �� �,&quot;!� �D&quot;!� �� _ ` ��~}� ��� �� �� �,&quot;!� 8y&quot;!� �� ��~}� ����� �� �� �� _ �� _ � �� �� _ �� �� �� �� �� �� � �� _ �� _ ef �� _ ef �� _ ef �� _ ef �� _ ef �� _ �� _ �� _ ef �� _ ef �~� ��~�KJ ��~�� ��~�� �  ��~�� �  �e~�� �  �`~�� � �_~�� � ��~�� � ����� Nk����靑async-profiler 4.2.1async-profiler.jfr�������� ����3������������ l����靑kversion4.2.1���� l����靑kenginewall���� l����靑kcstackvm���� l����靑kclock	monotonic���� l����靑keventwall���� l����靑kfilter ���� l����靑kbegin ���� l����靑kend ���� l����靑kjstackdepth2048���� l����靑kjfropts0���� l����靑k	chunksize	104857600���� l����靑k	chunktime3600񀀀 l����靑kfeaturesVunknown_java unwind_stub unwind_comp unwind_native java_anchor gc_traces - - - - - - -���� l����靑eenabledtrue���� l����靑einterval10000000���� l����靑ealluserfalse���� l����靑fenabledfalse���� l����靑genabledfalse���� l����靑henabledfalse���� l����靑ienabledfalse���� l����靑senabledfalse���� l����靑{enabledfalse���� l����靑kdebugSymbolstrue���� l����靑k
+kernelSymbolsfalse���� m����靑funame: Linux 6.17.0-14-generic #14~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Jan 15 15:52:10 UTC 2 x86_64� n����靑x86_64�processor	: 0
 vendor_id	: AuthenticAMD
 cpu family	: 26
 model		: 68
 model name	: AMD Ryzen 9 9950X 16-Core Processor
 stepping	: 0
 microcode	: 0xb404023
-cpu MHz		: 5606.088
+cpu MHz		: 5597.887
 cache size	: 1024 KB
 physical id	: 0
 siblings	: 32
@@ -12924,8 +12929,8 @@ fpu		: yes
 fpu_exception	: yes
 cpuid level	: 16
 wp		: yes
-  ���� o�������OpenJDK 64-Bit Server VM21.0.10+7-Ubuntu-124.04-Xmx12G -Xms4G ?fabric-server-mc.1.21.11-loader.0.18.4-launcher.1.1.1.jar nogui�����3��΀�� p�������java.vm.specification.name&quot;Java Virtual Machine Specification���� p�������java.vm.version21.0.10+7-Ubuntu-124.04���� p�������java.vm.nameOpenJDK 64-Bit Server VM���� p�������	jdk.debugreleasè�� p�������sun.boot.library.path&amp;/usr/lib/jvm/java-21-openjdk-amd64/lib���� p�������java.library.path/usr/java/packages/lib:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib���� p�������	java.home&quot;/usr/lib/jvm/java-21-openjdk-amd64ڀ�� p�������java.class.path9fabric-server-mc.1.21.11-loader.0.18.4-launcher.1.1.1.jar���� p�������java.vm.infomixed mode, sharing���� p�������java.vm.specification.vendorOracle Corporation���� p�������java.vm.specification.version21���� p�������java.vm.vendorUbuntuက� p�������sun.java.command?fabric-server-mc.1.21.11-loader.0.18.4-launcher.1.1.1.jar nogui���� p�������sun.java.launcherSUN_STANDARD���� p�������java.vm.compressedOopsMode
-Zero based̀�� q�������./usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2��аĢ��ڰĢՀ�� q�������7/usr/lib/jvm/java-21-openjdk-amd64/lib/libmanagement.so��ǰĢ��ǰĢÀ�� q�������%/usr/lib/x86_64-linux-gnu/libz.so.1.3����Ģ��ŰĢŀ�� q�������&#x27;/usr/lib/x86_64-linux-gnu/libgcc_s.so.1�రĢ�๰Ģπ�� q�������1/usr/lib/jvm/java-21-openjdk-amd64/lib/libjava.so����Ģ�୰Ģ΀�� q�������0/usr/lib/jvm/java-21-openjdk-amd64/lib/libnio.so����Ģ����Ģǀ�� q�������)/usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0�������������� q�������$/usr/lib/x86_64-linux-gnu/libdl.so.2������������ɀ�� q�������+/usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0����â����âȀ�� q�������*/usr/lib/x86_64-linux-gnu/libudev.so.1.7.8���â����âӀ�� q�������5/usr/lib/jvm/java-21-openjdk-amd64/lib/libawt_xawt.so������������΀�� q�������0/usr/lib/jvm/java-21-openjdk-amd64/lib/libawt.so�������஠��耀� q�������J/tmp/sqlite-3.47.2.0-153d052b-cd81-487c-8b2b-0e97f506f59c-libsqlitejdbc.so���������������� q�������[vdso]��ϰĢ��ϰĢՀ�� q�������7/usr/lib/jvm/java-21-openjdk-amd64/lib/server/libjvm.so����Ģ��ƬĢ�� q�������$/usr/lib/x86_64-linux-gnu/librt.so.1���������������� q��������/home/pilidium/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/instances/pilidium/server/config/spark/tmp/spark-22c602b948724-libasyncProfiler.so.tmp���줢���줢耀� q�������J/tmp/sqlite-3.47.2.0-8c6458c6-f8d7-4704-8fa3-95f85b86a507-libsqlitejdbc.so������������р�� q�������3/usr/lib/x86_64-linux-gnu/libnss_mdns4_minimal.so.2����â����â���� q�������B/home/pilidium/.cache/JNA/temp/jna764745133028691123.tmp (deleted)������������ˀ�� q�������-/usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0����â����â΀�� q�������0/usr/lib/jvm/java-21-openjdk-amd64/lib/libzip.so����Ģ����Ģǀ�� q�������)/usr/lib/x86_64-linux-gnu/libX11.so.6.4.0������������΀�� q�������0/usr/lib/jvm/java-21-openjdk-amd64/lib/libjli.so����Ģ�ྰĢƀ�� q�������(/usr/lib/x86_64-linux-gnu/libmd.so.0.1.0������������ـ�� q�������;/tmp/libzstd-jni_dh-1.5.7-67511566014136816414.so (deleted)�������໤��ɀ�� q�������+/usr/lib/jvm/java-21-openjdk-amd64/bin/java����������Ȁ�� q�������*/usr/lib/x86_64-linux-gnu/libbsd.so.0.12.1����¢����¢ƀ�� q�������(/usr/lib/x86_64-linux-gnu/libcap.so.2.66����Ģ����ĢЀ�� q�������2/usr/lib/jvm/java-21-openjdk-amd64/lib/libjsvml.so����¢����¢ǀ�� q�������)/usr/lib/x86_64-linux-gnu/libXau.so.6.0.0����â����âȀ�� q�������*/usr/lib/x86_64-linux-gnu/libXext.so.6.4.0����â����âƀ�� q�������(/usr/lib/x86_64-linux-gnu/libXi.so.6.1.0����â����â���� q�������#/usr/lib/x86_64-linux-gnu/libm.so.6��ɣĢ���Ģـ�� q�������;/usr/lib/jvm/java-21-openjdk-amd64/lib/libmanagement_ext.so��׮Ģ��خĢр�� q�������3/usr/lib/jvm/java-21-openjdk-amd64/lib/libextnet.so���������������� q�������&quot;/tmp/native-1446272224274260775.so���â����â���� q�������#/usr/lib/x86_64-linux-gnu/libc.so.6����Ģ���Ģ���� q�������&quot;/tmp/native-2181827666554288296.so����â����âȀ�� q�������*/usr/lib/x86_64-linux-gnu/libXtst.so.6.1.0����â����âǀ�� q�������)/usr/lib/x86_64-linux-gnu/libpthread.so.0����Ģ����Ģƀ�� q�������(/usr/lib/x86_64-linux-gnu/libcrypto.so.3�ଦ��������р�� q�������3/usr/lib/jvm/java-21
+  ���� o����靑OpenJDK 64-Bit Server VM21.0.10+7-Ubuntu-124.04-Xmx12G -Xms4G ?fabric-server-mc.1.21.11-loader.0.18.4-launcher.1.1.1.jar nogui�����3��΀�� p����靑java.vm.specification.name&quot;Java Virtual Machine Specification���� p����靑java.vm.version21.0.10+7-Ubuntu-124.04���� p����靑java.vm.nameOpenJDK 64-Bit Server VM���� p����靑	jdk.debugreleasè�� p����靑sun.boot.library.path&amp;/usr/lib/jvm/java-21-openjdk-amd64/lib���� p����靑java.library.path/usr/java/packages/lib:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib���� p����靑	java.home&quot;/usr/lib/jvm/java-21-openjdk-amd64ڀ�� p����靑java.class.path9fabric-server-mc.1.21.11-loader.0.18.4-launcher.1.1.1.jar���� p����靑java.vm.infomixed mode, sharing���� p����靑java.vm.specification.vendorOracle Corporation���� p����靑java.vm.specification.version21���� p����靑java.vm.vendorUbuntuက� p����靑sun.java.command?fabric-server-mc.1.21.11-loader.0.18.4-launcher.1.1.1.jar nogui���� p����靑sun.java.launcherSUN_STANDARD���� p����靑java.vm.compressedOopsMode
+Zero based̀�� q����靑./usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2��аĢ��ڰĢՀ�� q����靑7/usr/lib/jvm/java-21-openjdk-amd64/lib/libmanagement.so��ǰĢ��ǰĢÀ�� q����靑%/usr/lib/x86_64-linux-gnu/libz.so.1.3����Ģ��ŰĢŀ�� q����靑&#x27;/usr/lib/x86_64-linux-gnu/libgcc_s.so.1�రĢ�๰Ģπ�� q����靑1/usr/lib/jvm/java-21-openjdk-amd64/lib/libjava.so����Ģ�୰Ģ΀�� q����靑0/usr/lib/jvm/java-21-openjdk-amd64/lib/libnio.so����Ģ����Ģǀ�� q����靑)/usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0�������������� q����靑$/usr/lib/x86_64-linux-gnu/libdl.so.2������������ɀ�� q����靑+/usr/lib/x86_64-linux-gnu/libXdmcp.so.6.0.0����â����âȀ�� q����靑*/usr/lib/x86_64-linux-gnu/libudev.so.1.7.8���â����âӀ�� q����靑5/usr/lib/jvm/java-21-openjdk-amd64/lib/libawt_xawt.so������������΀�� q����靑0/usr/lib/jvm/java-21-openjdk-amd64/lib/libawt.so�������஠��耀� q����靑J/tmp/sqlite-3.47.2.0-153d052b-cd81-487c-8b2b-0e97f506f59c-libsqlitejdbc.so���������������� q����靑[vdso]��ϰĢ��ϰĢՀ�� q����靑7/usr/lib/jvm/java-21-openjdk-amd64/lib/server/libjvm.so����Ģ��ƬĢ�� q����靑$/usr/lib/x86_64-linux-gnu/librt.so.1���������������� q����靑�/home/pilidium/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/instances/pilidium/server/config/spark/tmp/spark-22c602b948724-libasyncProfiler.so.tmp���줢���줢耀� q����靑J/tmp/sqlite-3.47.2.0-8c6458c6-f8d7-4704-8fa3-95f85b86a507-libsqlitejdbc.so������������р�� q����靑3/usr/lib/x86_64-linux-gnu/libnss_mdns4_minimal.so.2����â����â���� q����靑B/home/pilidium/.cache/JNA/temp/jna764745133028691123.tmp (deleted)������������ˀ�� q����靑-/usr/lib/x86_64-linux-gnu/libXrender.so.1.3.0����â����â΀�� q����靑0/usr/lib/jvm/java-21-openjdk-amd64/lib/libzip.so����Ģ����Ģǀ�� q����靑)/usr/lib/x86_64-linux-gnu/libX11.so.6.4.0������������΀�� q����靑0/usr/lib/jvm/java-21-openjdk-amd64/lib/libjli.so����Ģ�ྰĢƀ�� q����靑(/usr/lib/x86_64-linux-gnu/libmd.so.0.1.0������������ـ�� q����靑;/tmp/libzstd-jni_dh-1.5.7-67511566014136816414.so (deleted)�������໤��ɀ�� q����靑+/usr/lib/jvm/java-21-openjdk-amd64/bin/java����������Ȁ�� q����靑*/usr/lib/x86_64-linux-gnu/libbsd.so.0.12.1����¢����¢ƀ�� q����靑(/usr/lib/x86_64-linux-gnu/libcap.so.2.66����Ģ����ĢЀ�� q����靑2/usr/lib/jvm/java-21-openjdk-amd64/lib/libjsvml.so����¢����¢ǀ�� q����靑)/usr/lib/x86_64-linux-gnu/libXau.so.6.0.0����â����âȀ�� q����靑*/usr/lib/x86_64-linux-gnu/libXext.so.6.4.0����â����âƀ�� q����靑(/usr/lib/x86_64-linux-gnu/libXi.so.6.1.0����â����â���� q����靑#/usr/lib/x86_64-linux-gnu/libm.so.6��ɣĢ���Ģـ�� q����靑;/usr/lib/jvm/java-21-openjdk-amd64/lib/libmanagement_ext.so��׮Ģ��خĢр�� q����靑3/usr/lib/jvm/java-21-openjdk-amd64/lib/libextnet.so���������������� q����靑&quot;/tmp/native-1446272224274260775.so���â����â���� q����靑#/usr/lib/x86_64-linux-gnu/libc.so.6����Ģ���Ģ���� q����靑&quot;/tmp/native-2181827666554288296.so����â����âȀ�� q����靑*/usr/lib/x86_64-linux-gnu/libXtst.so.6.1.0����â����âǀ�� q����靑)/usr/lib/x86_64-linux-gnu/libpthread.so.0����Ģ����Ģƀ�� q����靑(/usr/lib/x86_64-linux-gnu/libcrypto.so.3�ଦ��������р�� q����靑3/usr/lib/jvm/java-21-openjdk-amd64/lib/libverify.so����Ģ����Ģр�� q����靑3/usr/lib/jvm/java-21-openjdk-amd64/lib/libjimage.so��˰Ģ��̰Ģˀ�� q����靑-/usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33�
 ... (truncated, file too large)</code></pre>
                     </div>
                 </div>
@@ -25090,23 +25095,23 @@ profile_name = Default
 
         <div class="player-stats-summary">
             <div class="stat-card">
-                <div class="num">38d 10h</div>
+                <div class="num">38d 11h</div>
                 <div class="label">Total Playtime</div>
             </div>
             <div class="stat-card">
-                <div class="num">864</div>
+                <div class="num">867</div>
                 <div class="label">Total Deaths</div>
             </div>
             <div class="stat-card">
-                <div class="num">120,368</div>
+                <div class="num">120,375</div>
                 <div class="label">Mobs Killed</div>
             </div>
             <div class="stat-card">
-                <div class="num">568,695</div>
+                <div class="num">569,282</div>
                 <div class="label">Blocks Mined</div>
             </div>
             <div class="stat-card">
-                <div class="num">3,245</div>
+                <div class="num">3,247</div>
                 <div class="label">Advancements Earned</div>
             </div>
         </div>
@@ -25160,13 +25165,13 @@ profile_name = Default
                         </div>
                     </td>
                     <td data-val="2026-02-11 14:12">2026-02-11 14:12</td>
-                    <td data-val="2026-02-22 14:34">2026-02-22 14:34</td>
-                    <td class="num-cell" data-val="6105420">3d 12h</td>
+                    <td data-val="2026-02-22 17:59">2026-02-22 17:59</td>
+                    <td class="num-cell" data-val="6114785">3d 12h</td>
                     <td class="num-cell" data-val="62">62</td>
                     <td class="num-cell" data-val="12240">12,240</td>
-                    <td class="num-cell" data-val="25578519">255.8km</td>
-                    <td class="num-cell" data-val="12484389">124.8km</td>
-                    <td class="num-cell" data-val="47334">47,334</td>
+                    <td class="num-cell" data-val="25634327">256.3km</td>
+                    <td class="num-cell" data-val="12533605">125.3km</td>
+                    <td class="num-cell" data-val="47415">47,415</td>
                     <td class="num-cell" data-val="34341">34,341</td>
                     <td class="num-cell" data-val="210">210</td>
                 </tr>
@@ -25304,13 +25309,13 @@ profile_name = Default
                         </div>
                     </td>
                     <td data-val="2026-02-18 01:13">2026-02-18 01:13</td>
-                    <td data-val="2026-02-22 16:39">2026-02-22 16:39</td>
-                    <td class="num-cell" data-val="2942830">1d 16h</td>
+                    <td data-val="2026-02-22 18:07">2026-02-22 18:07</td>
+                    <td class="num-cell" data-val="2951889">1d 16h</td>
                     <td class="num-cell" data-val="71">71</td>
                     <td class="num-cell" data-val="18074">18,074</td>
-                    <td class="num-cell" data-val="12820167">128.2km</td>
-                    <td class="num-cell" data-val="11091977">110.9km</td>
-                    <td class="num-cell" data-val="127412">127,412</td>
+                    <td class="num-cell" data-val="12868831">128.7km</td>
+                    <td class="num-cell" data-val="11145945">111.5km</td>
+                    <td class="num-cell" data-val="127675">127,675</td>
                     <td class="num-cell" data-val="61340">61,340</td>
                     <td class="num-cell" data-val="191">191</td>
                 </tr>
@@ -25448,14 +25453,14 @@ profile_name = Default
                         </div>
                     </td>
                     <td data-val="2026-02-20 14:15">2026-02-20 14:15</td>
-                    <td data-val="2026-02-22 16:06">2026-02-22 16:06</td>
-                    <td class="num-cell" data-val="895025">12h 25m</td>
-                    <td class="num-cell" data-val="10">10</td>
+                    <td data-val="2026-02-22 18:06">2026-02-22 18:06</td>
+                    <td class="num-cell" data-val="918637">12h 45m</td>
+                    <td class="num-cell" data-val="11">11</td>
                     <td class="num-cell" data-val="67">67</td>
-                    <td class="num-cell" data-val="5634964">56.3km</td>
-                    <td class="num-cell" data-val="387285">3.9km</td>
-                    <td class="num-cell" data-val="39780">39,780</td>
-                    <td class="num-cell" data-val="1544">1,544</td>
+                    <td class="num-cell" data-val="5754994">57.5km</td>
+                    <td class="num-cell" data-val="394816">3.9km</td>
+                    <td class="num-cell" data-val="39885">39,885</td>
+                    <td class="num-cell" data-val="1868">1,868</td>
                     <td class="num-cell" data-val="66">66</td>
                 </tr>
                 <tr data-name="aviatorgator">
@@ -25494,8 +25499,26 @@ profile_name = Default
                     <td class="num-cell" data-val="1404">1,404</td>
                     <td class="num-cell" data-val="94">94</td>
                 </tr>
-                <tr data-name="mortal9429">
+                <tr data-name="cheromelon">
                     <td class="num-cell" data-val="21" style="color:var(--text-dim);font-size:0.8rem">21</td>
+                    <td>
+                        <div class="player-name">
+                            <span>cheromelon</span>
+                        </div>
+                    </td>
+                    <td data-val="2026-02-19 22:56">2026-02-19 22:56</td>
+                    <td data-val="2026-02-22 17:41">2026-02-22 17:41</td>
+                    <td class="num-cell" data-val="739741">10h 16m</td>
+                    <td class="num-cell" data-val="17">17</td>
+                    <td class="num-cell" data-val="87">87</td>
+                    <td class="num-cell" data-val="4176565">41.8km</td>
+                    <td class="num-cell" data-val="2090815">20.9km</td>
+                    <td class="num-cell" data-val="3321">3,321</td>
+                    <td class="num-cell" data-val="3616">3,616</td>
+                    <td class="num-cell" data-val="67">67</td>
+                </tr>
+                <tr data-name="mortal9429">
+                    <td class="num-cell" data-val="22" style="color:var(--text-dim);font-size:0.8rem">22</td>
                     <td>
                         <div class="player-name">
                             <span>Mortal9429</span>
@@ -25511,24 +25534,6 @@ profile_name = Default
                     <td class="num-cell" data-val="13618">13,618</td>
                     <td class="num-cell" data-val="3682">3,682</td>
                     <td class="num-cell" data-val="75">75</td>
-                </tr>
-                <tr data-name="cheromelon">
-                    <td class="num-cell" data-val="22" style="color:var(--text-dim);font-size:0.8rem">22</td>
-                    <td>
-                        <div class="player-name">
-                            <span>cheromelon</span>
-                        </div>
-                    </td>
-                    <td data-val="2026-02-19 22:56">2026-02-19 22:56</td>
-                    <td data-val="2026-02-22 17:41">2026-02-22 17:41</td>
-                    <td class="num-cell" data-val="715741">9h 56m</td>
-                    <td class="num-cell" data-val="15">15</td>
-                    <td class="num-cell" data-val="80">80</td>
-                    <td class="num-cell" data-val="4030810">40.3km</td>
-                    <td class="num-cell" data-val="2047154">20.5km</td>
-                    <td class="num-cell" data-val="3183">3,183</td>
-                    <td class="num-cell" data-val="3568">3,568</td>
-                    <td class="num-cell" data-val="65">65</td>
                 </tr>
                 <tr data-name="hope2k5">
                     <td class="num-cell" data-val="23" style="color:var(--text-dim);font-size:0.8rem">23</td>

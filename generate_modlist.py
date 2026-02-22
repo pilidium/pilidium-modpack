@@ -1451,13 +1451,14 @@ def generate_html():
     def mod_rows(mods):
         rows = []
         for m in mods:
+            desc_escaped = html.escape(m['desc'])
             rows.append(f'''
                 <tr data-name="{html.escape(m['name'].lower())}" data-req="{m['req']}" data-side="{m['side']}">
-                    <td class="mod-name"><strong>{html.escape(m['name'])}</strong></td>
+                    <td class="mod-name"><strong>{html.escape(m['name'])}</strong><span class="mob-desc">{desc_escaped}</span></td>
                     <td><code>{html.escape(m['version'])}</code></td>
-                    <td>{req_badge(m['req'])}</td>
-                    <td>{side_badge(m['side'])}</td>
-                    <td class="mod-desc">{html.escape(m['desc'])}</td>
+                    <td class="col-req">{req_badge(m['req'])}</td>
+                    <td class="col-side">{side_badge(m['side'])}</td>
+                    <td class="mod-desc">{desc_escaped}</td>
                 </tr>''')
         return "\n".join(rows)
 
@@ -1687,6 +1688,9 @@ h1 small {{
     padding: 0.75rem 1.25rem;
     background: var(--surface);
     border: 1px solid var(--border);
+    max-width: 100%;
+    overflow-x: auto;
+    box-sizing: border-box;
 }}
 .legend-item {{
     display: flex;
@@ -1863,6 +1867,7 @@ tbody tr:hover {{ background: rgba(85,255,85,0.05); }}
 tbody tr.hidden {{ display: none; }}
 td {{ padding: 0.6rem 1rem; vertical-align: middle; }}
 td.mod-name {{ white-space: nowrap; font-weight: 600; color: var(--text-bright); }}
+td.mod-name .mob-desc {{ display: none; }}
 td.mod-desc {{ color: var(--text-dim); min-width: 200px; }}
 td code {{
     background: var(--code-bg);
@@ -2168,7 +2173,7 @@ td.num-cell {{
     .tab {{ padding: 0.5rem 0.85rem; font-size: 0.75rem; flex-shrink: 0; }}
     .tab-panel {{ padding: 1rem 0.85rem; border-radius: 0 0 var(--radius) var(--radius); }}
     .controls {{ gap: 0.5rem; }}
-    .legend {{ gap: 0.4rem 1.25rem; font-size: 0.72rem; grid-template-columns: repeat(2, auto); }}
+    .legend {{ gap: 0.4rem 1rem; font-size: 0.72rem; grid-template-columns: repeat(2, auto); max-width: 100%; }}
     td {{ padding: 0.45rem 0.65rem; font-size: 0.75rem; }}
     td.mod-desc {{ min-width: 120px; }}
     .config-header {{ flex-wrap: wrap; gap: 0.4rem; }}
@@ -2190,11 +2195,12 @@ td.num-cell {{
     .header-content {{ flex-wrap: wrap; gap: 0.5rem; }}
     .theme-toggle {{ font-size: 0.68rem; padding: 0.3rem 0.6rem; }}
     .legend {{ grid-template-columns: 1fr 1fr; gap: 0.35rem 0.75rem; font-size: 0.68rem; padding: 0.6rem 0.75rem; }}
-    /* Hide less-important table columns on small phones */
-    table th:nth-child(n+3),
-    table td:nth-child(n+3) {{ display: none; }}
+    /* Hide Required/Side columns & desktop description; show inline description */
+    .mod-table-wrap th:nth-child(3), .mod-table-wrap td:nth-child(3),
+    .mod-table-wrap th:nth-child(4), .mod-table-wrap td:nth-child(4) {{ display: none; }}
+    .mod-table-wrap td.mod-desc, .mod-table-wrap th:nth-child(5) {{ display: none; }}
     td.mod-name {{ white-space: normal; word-break: break-word; }}
-    td.mod-desc {{ min-width: 0; }}
+    td.mod-name .mob-desc {{ display: block; font-weight: 400; font-size: 0.72rem; color: var(--text-dim); margin-top: 0.2rem; line-height: 1.35; }}
     .config-content pre {{ font-size: 0.68rem; padding: 0.65rem; }}
     h2 {{ font-size: 1rem; margin: 1.25rem 0 0.75rem; }}
     h2 .count {{ font-size: 0.68rem; display: block; margin-left: 0; margin-top: 0.15rem; }}
