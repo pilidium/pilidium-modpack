@@ -1381,6 +1381,30 @@ def collect_gamerules():
     return rules, changed
 
 
+def _get_dir_size(path):
+    """Return total size of a directory in bytes, or 0 if not found."""
+    total = 0
+    if not os.path.isdir(path):
+        return 0
+    for dirpath, _dirnames, filenames in os.walk(path):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            try:
+                total += os.path.getsize(fp)
+            except OSError:
+                pass
+    return total
+
+
+def _format_size(nbytes):
+    """Human-readable file size."""
+    for unit in ('B', 'KB', 'MB', 'GB', 'TB'):
+        if abs(nbytes) < 1024:
+            return f"{nbytes:.1f} {unit}"
+        nbytes /= 1024
+    return f"{nbytes:.1f} PB"
+
+
 def generate_html():
     client_mods = collect_client_mods()
     server_mods = collect_server_mods()
@@ -1390,6 +1414,17 @@ def generate_html():
     server_props, changed_props, raw_properties = collect_server_properties()
     gamerules, changed_gamerules = collect_gamerules()
     datapacks = collect_datapacks()
+
+    # World / backup sizes
+    world_dir = os.path.join(SERVER_DIR, "world")
+    backup_dir = os.path.join(SERVER_DIR, "world", ".git")
+    world_size_bytes = _get_dir_size(world_dir)
+    backup_size_bytes = _get_dir_size(backup_dir)
+    # World size excluding .git
+    world_only_bytes = world_size_bytes - backup_size_bytes
+    world_size_str = _format_size(world_only_bytes)
+    backup_size_str = _format_size(backup_size_bytes)
+
     ai_guide_cards = build_ai_guide_cards(client_mods, server_mods, datapacks)
 
     # Build config sections per mod
@@ -2189,7 +2224,8 @@ td.num-cell {{
 
     <!-- ── Tab Navigation ── -->
     <div class="tabs">
-        <button class="tab active" data-tab="client-mods">Client Mods</button>
+        <button class="tab active" data-tab="home">Home</button>
+        <button class="tab" data-tab="client-mods">Client Mods</button>
         <button class="tab" data-tab="server-mods">Server Mods</button>
         <button class="tab" data-tab="client-configs">Client Configs</button>
         <button class="tab" data-tab="server-configs">Server Configs</button>
@@ -2199,8 +2235,44 @@ td.num-cell {{
         <button class="tab" data-tab="beginners-guide">Beginner's Guide</button>
     </div>
 
+    <!-- ═══ HOME ═══ -->
+    <div id="home" class="tab-panel active">
+        <h2>Welcome to <span style="color:var(--accent)">Pilidium</span></h2>
+
+        <div style="margin:1.5rem 0; line-height:1.8;">
+            <p style="margin-bottom:1rem; color:var(--text);">Non-consensual griefing/attacking is highly discouraged. We are a relatively peaceful bunch of people trying to enjoy the game in our own ways.</p>
+            <div style="display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:1.25rem;">
+                <span class="badge" style="background:var(--hover-tint); border:1px solid var(--accent); color:var(--accent); padding:0.4rem 1rem; font-size:0.82rem;">TLauncher players can join</span>
+                <span class="badge" style="background:var(--hover-tint); border:1px solid var(--accent2); color:var(--accent2); padding:0.4rem 1rem; font-size:0.82rem;">Server backup every 2 hours</span>
+            </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-top:2rem;">
+            <div class="stat-card">
+                <div class="num">{world_size_str}</div>
+                <div class="label">World Size</div>
+            </div>
+            <div class="stat-card">
+                <div class="num">{backup_size_str}</div>
+                <div class="label">Backup Size (Git)</div>
+            </div>
+            <div class="stat-card">
+                <div class="num">{len(client_mods)}</div>
+                <div class="label">Client Mods</div>
+            </div>
+            <div class="stat-card">
+                <div class="num">{len(server_mods)}</div>
+                <div class="label">Server Mods</div>
+            </div>
+            <div class="stat-card">
+                <div class="num">{len(players)}</div>
+                <div class="label">Players</div>
+            </div>
+        </div>
+    </div>
+
     <!-- ═══ CLIENT MODS ═══ -->
-    <div id="client-mods" class="tab-panel active">
+    <div id="client-mods" class="tab-panel">
         <h2>Client Mods <span class="count">({len(client_mods)} mods)</span></h2>
         <div class="controls">
             <input type="text" class="search-box" placeholder="Search client mods…" data-target="client-table">
