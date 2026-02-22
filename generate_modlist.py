@@ -9,6 +9,9 @@ import re
 import json
 import html
 import glob
+import gzip
+import struct
+import io
 import urllib.request
 import urllib.error
 
@@ -27,6 +30,7 @@ USERCACHE = os.path.join(SERVER_DIR, "usercache.json")
 OPS_FILE = os.path.join(SERVER_DIR, "ops.json")
 WHITELIST_FILE = os.path.join(SERVER_DIR, "whitelist.json")
 SERVER_PROPERTIES = os.path.join(SERVER_DIR, "server.properties")
+LEVEL_DAT = os.path.join(SERVER_DIR, "world", "level.dat")
 AI_CACHE_FILE = os.path.join(SCRIPT_DIR, "ai_cache.json")
 DATAPACK_DIR = os.path.join(SERVER_DIR, "world", "datapacks")
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
@@ -1168,6 +1172,215 @@ def collect_server_properties():
     return props, changed, raw
 
 
+# ── Gamerule knowledge base ─────────────────────────────────────────────────
+# Minecraft 1.21 vanilla defaults  (all values are strings in the NBT)
+GAMERULE_DEFAULTS = {
+    "minecraft:advance_time": "1",
+    "minecraft:advance_weather": "1",
+    "minecraft:allow_entering_nether_using_portals": "1",
+    "minecraft:block_drops": "1",
+    "minecraft:block_explosion_drop_decay": "1",
+    "minecraft:command_block_output": "1",
+    "minecraft:command_blocks_work": "1",
+    "minecraft:drowning_damage": "1",
+    "minecraft:elytra_movement_check": "1",
+    "minecraft:ender_pearls_vanish_on_death": "1",
+    "minecraft:entity_drops": "1",
+    "minecraft:fall_damage": "1",
+    "minecraft:fire_damage": "1",
+    "minecraft:fire_spread_radius_around_player": "128",
+    "minecraft:forgive_dead_players": "1",
+    "minecraft:freeze_damage": "1",
+    "minecraft:global_sound_events": "1",
+    "minecraft:immediate_respawn": "0",
+    "minecraft:keep_inventory": "0",
+    "minecraft:lava_source_conversion": "0",
+    "minecraft:limited_crafting": "0",
+    "minecraft:locator_bar": "1",
+    "minecraft:log_admin_commands": "1",
+    "minecraft:max_block_modifications": "32768",
+    "minecraft:max_command_forks": "65536",
+    "minecraft:max_command_sequence_length": "65536",
+    "minecraft:max_entity_cramming": "24",
+    "minecraft:max_snow_accumulation_height": "1",
+    "minecraft:mob_drops": "1",
+    "minecraft:mob_explosion_drop_decay": "1",
+    "minecraft:mob_griefing": "1",
+    "minecraft:natural_health_regeneration": "1",
+    "minecraft:player_movement_check": "1",
+    "minecraft:players_nether_portal_creative_delay": "0",
+    "minecraft:players_nether_portal_default_delay": "80",
+    "minecraft:players_sleeping_percentage": "100",
+    "minecraft:projectiles_can_break_blocks": "1",
+    "minecraft:pvp": "1",
+    "minecraft:raids": "1",
+    "minecraft:random_tick_speed": "3",
+    "minecraft:reduced_debug_info": "0",
+    "minecraft:respawn_radius": "10",
+    "minecraft:send_command_feedback": "1",
+    "minecraft:show_advancement_messages": "1",
+    "minecraft:show_death_messages": "1",
+    "minecraft:spawn_mobs": "1",
+    "minecraft:spawn_monsters": "1",
+    "minecraft:spawn_patrols": "1",
+    "minecraft:spawn_phantoms": "1",
+    "minecraft:spawn_wandering_traders": "1",
+    "minecraft:spawn_wardens": "1",
+    "minecraft:spawner_blocks_work": "1",
+    "minecraft:spectators_generate_chunks": "1",
+    "minecraft:spread_vines": "1",
+    "minecraft:tnt_explodes": "1",
+    "minecraft:tnt_explosion_drop_decay": "0",
+    "minecraft:universal_anger": "0",
+    "minecraft:water_source_conversion": "1",
+}
+
+GAMERULE_EXPLANATIONS = {
+    "minecraft:advance_time": "Whether in-game time of day advances.",
+    "minecraft:advance_weather": "Whether weather patterns change over time.",
+    "minecraft:allow_entering_nether_using_portals": "Whether players can use nether portals to travel between dimensions.",
+    "minecraft:block_drops": "Whether blocks drop items when broken.",
+    "minecraft:block_explosion_drop_decay": "Whether some block drops are destroyed by block-caused explosions (TNT).",
+    "minecraft:command_block_output": "Whether command blocks show their output in chat.",
+    "minecraft:command_blocks_work": "Whether command blocks can execute commands.",
+    "minecraft:drowning_damage": "Whether players and mobs take drowning damage.",
+    "minecraft:elytra_movement_check": "Whether the server validates elytra flight speed to prevent cheating.",
+    "minecraft:ender_pearls_vanish_on_death": "Whether thrown ender pearls disappear when the player dies.",
+    "minecraft:entity_drops": "Whether entities (excluding blocks) drop items on death.",
+    "minecraft:fall_damage": "Whether players and mobs take fall damage.",
+    "minecraft:fire_damage": "Whether players and mobs take fire/lava damage.",
+    "minecraft:fire_spread_radius_around_player": "Block radius around players within which fire can spread. 0 disables fire spread.",
+    "minecraft:forgive_dead_players": "Whether angered neutral mobs stop being angry when the target player dies.",
+    "minecraft:freeze_damage": "Whether players and mobs take freezing damage from powder snow.",
+    "minecraft:global_sound_events": "Whether certain sounds (e.g. wither spawning) are heard globally.",
+    "minecraft:immediate_respawn": "Whether players respawn instantly without the death screen.",
+    "minecraft:keep_inventory": "Whether players keep their inventory and XP on death.",
+    "minecraft:lava_source_conversion": "Whether lava can form source blocks (like water does).",
+    "minecraft:limited_crafting": "Whether players can only craft recipes they have unlocked.",
+    "minecraft:locator_bar": "Whether the boss bar / locator bar displays at the top of the screen.",
+    "minecraft:log_admin_commands": "Whether admin commands are logged to the server log.",
+    "minecraft:max_block_modifications": "Maximum number of block changes per tick from commands.",
+    "minecraft:max_command_forks": "Maximum number of command forks (e.g. /execute) allowed.",
+    "minecraft:max_command_sequence_length": "Maximum length of a command sequence that can execute in a single tick.",
+    "minecraft:max_entity_cramming": "Maximum number of entities that can push into the same block before suffocation damage begins.",
+    "minecraft:max_snow_accumulation_height": "Maximum layers of snow that can accumulate from snowfall.",
+    "minecraft:mob_drops": "Whether mobs drop loot on death.",
+    "minecraft:mob_explosion_drop_decay": "Whether some block drops are destroyed by mob-caused explosions (creepers, ghasts).",
+    "minecraft:mob_griefing": "Whether mobs can modify blocks (creeper explosions, endermen picking up blocks, etc.).",
+    "minecraft:natural_health_regeneration": "Whether players naturally regenerate health when their hunger bar is full.",
+    "minecraft:player_movement_check": "Whether the server validates player movement to prevent cheating.",
+    "minecraft:players_nether_portal_creative_delay": "Ticks a creative-mode player must stand in a nether portal before teleporting. 0 = instant.",
+    "minecraft:players_nether_portal_default_delay": "Ticks a survival/adventure player must stand in a nether portal before teleporting.",
+    "minecraft:players_sleeping_percentage": "Percentage of online players that must sleep to skip the night. 100 = all, 0 = one player suffices.",
+    "minecraft:projectiles_can_break_blocks": "Whether projectiles (arrows, tridents) can break certain blocks like chorus flowers.",
+    "minecraft:pvp": "Whether players can deal damage to other players.",
+    "minecraft:raids": "Whether raids can spawn when a player with Bad Omen enters a village.",
+    "minecraft:random_tick_speed": "Speed of random block ticks (crop growth, leaf decay, etc.). Default 3, higher = faster.",
+    "minecraft:reduced_debug_info": "Whether the debug screen (F3) shows reduced information.",
+    "minecraft:respawn_radius": "Block radius around the world spawn within which players randomly respawn.",
+    "minecraft:send_command_feedback": "Whether command execution results are shown in chat.",
+    "minecraft:show_advancement_messages": "Whether advancement completion messages are broadcast in chat.",
+    "minecraft:show_death_messages": "Whether death messages are shown in chat.",
+    "minecraft:spawn_mobs": "Whether passive/neutral mobs can spawn naturally.",
+    "minecraft:spawn_monsters": "Whether hostile mobs can spawn naturally.",
+    "minecraft:spawn_patrols": "Whether pillager patrols can spawn.",
+    "minecraft:spawn_phantoms": "Whether phantoms can spawn for players who haven't slept.",
+    "minecraft:spawn_wandering_traders": "Whether wandering traders can spawn naturally.",
+    "minecraft:spawn_wardens": "Whether wardens can spawn when triggered by sculk shriekers.",
+    "minecraft:spawner_blocks_work": "Whether mob spawner blocks can spawn entities.",
+    "minecraft:spectators_generate_chunks": "Whether spectator-mode players cause chunk generation.",
+    "minecraft:spread_vines": "Whether vines (and similar blocks) can spread to adjacent surfaces.",
+    "minecraft:tnt_explodes": "Whether TNT blocks explode when ignited.",
+    "minecraft:tnt_explosion_drop_decay": "Whether some block drops are destroyed by TNT explosions.",
+    "minecraft:universal_anger": "Whether angered neutral mobs attack all nearby players, not just the one who provoked them.",
+    "minecraft:water_source_conversion": "Whether water can form new source blocks when flowing between two existing sources.",
+}
+
+
+def _parse_nbt_payload(f, tag_type):
+    """Minimal NBT payload reader — supports the types found in level.dat."""
+    if tag_type == 1:  return struct.unpack('>b', f.read(1))[0]
+    if tag_type == 2:  return struct.unpack('>h', f.read(2))[0]
+    if tag_type == 3:  return struct.unpack('>i', f.read(4))[0]
+    if tag_type == 4:  return struct.unpack('>q', f.read(8))[0]
+    if tag_type == 5:  return struct.unpack('>f', f.read(4))[0]
+    if tag_type == 6:  return struct.unpack('>d', f.read(8))[0]
+    if tag_type == 7:
+        n = struct.unpack('>i', f.read(4))[0]
+        return f.read(n)
+    if tag_type == 8:
+        n = struct.unpack('>h', f.read(2))[0]
+        return f.read(n).decode('utf-8')
+    if tag_type == 9:
+        item_type = struct.unpack('>b', f.read(1))[0]
+        n = struct.unpack('>i', f.read(4))[0]
+        return [_parse_nbt_payload(f, item_type) for _ in range(n)]
+    if tag_type == 10:
+        result = {}
+        while True:
+            child_type = struct.unpack('>b', f.read(1))[0]
+            if child_type == 0:
+                break
+            clen = struct.unpack('>h', f.read(2))[0]
+            cname = f.read(clen).decode('utf-8')
+            result[cname] = _parse_nbt_payload(f, child_type)
+        return result
+    if tag_type == 11:
+        n = struct.unpack('>i', f.read(4))[0]
+        return [struct.unpack('>i', f.read(4))[0] for _ in range(n)]
+    if tag_type == 12:
+        n = struct.unpack('>i', f.read(4))[0]
+        return [struct.unpack('>q', f.read(8))[0] for _ in range(n)]
+    return None
+
+
+def _read_level_dat(path):
+    """Read level.dat and return the root compound dict."""
+    with gzip.open(path) as gz:
+        data = gz.read()
+    f = io.BytesIO(data)
+    tag_type = struct.unpack('>b', f.read(1))[0]
+    nlen = struct.unpack('>h', f.read(2))[0]
+    f.read(nlen)  # root tag name
+    return _parse_nbt_payload(f, tag_type)
+
+
+def collect_gamerules():
+    """Read gamerules from level.dat, return (rules_list, changed_list).
+
+    rules_list:  [{key, display_key, value, default, changed, explanation}]
+    changed_list: subset where value != default
+    """
+    rules = []
+    changed = []
+    if not os.path.isfile(LEVEL_DAT):
+        return rules, changed
+    try:
+        root = _read_level_dat(LEVEL_DAT)
+        game_rules = root.get("Data", {}).get("game_rules", {})
+    except Exception:
+        return rules, changed
+    for key in sorted(game_rules.keys()):
+        value = str(game_rules[key])
+        default = GAMERULE_DEFAULTS.get(key)
+        is_changed = default is not None and value != default
+        explanation = GAMERULE_EXPLANATIONS.get(key, "")
+        # Friendly display: strip "minecraft:" prefix
+        display_key = key.replace("minecraft:", "") if key.startswith("minecraft:") else key
+        entry = {
+            "key": key,
+            "display_key": display_key,
+            "value": value,
+            "default": default if default is not None else "?",
+            "changed": is_changed,
+            "explanation": explanation,
+        }
+        rules.append(entry)
+        if is_changed:
+            changed.append(entry)
+    return rules, changed
+
+
 def generate_html():
     client_mods = collect_client_mods()
     server_mods = collect_server_mods()
@@ -1175,6 +1388,7 @@ def generate_html():
     server_configs = collect_configs(SERVER_CONFIG, "server")
     players = collect_players()
     server_props, changed_props, raw_properties = collect_server_properties()
+    gamerules, changed_gamerules = collect_gamerules()
     datapacks = collect_datapacks()
     ai_guide_cards = build_ai_guide_cards(client_mods, server_mods, datapacks)
 
@@ -1980,6 +2194,7 @@ td.num-cell {{
         <button class="tab" data-tab="client-configs">Client Configs</button>
         <button class="tab" data-tab="server-configs">Server Configs</button>
         <button class="tab" data-tab="server-properties">Server Properties</button>
+        <button class="tab" data-tab="gamerules">Gamerules</button>
         <button class="tab" data-tab="players">Players</button>
         <button class="tab" data-tab="beginners-guide">Beginner's Guide</button>
     </div>
@@ -2108,6 +2323,57 @@ td.num-cell {{
                         <td class="prop-default">{html.escape(str(p['default']))}</td>
                         <td class="prop-explain">{html.escape(p['explanation'])}</td>
                     </tr>""" for p in server_props)}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ═══ GAMERULES ═══ -->
+    <div id="gamerules" class="tab-panel">
+        <h2>Gamerules <span class="count">({len(changed_gamerules)} changed from default)</span></h2>
+
+        <h3 style="margin-top:1.5rem; color:var(--accent);">Non-Default Gamerules</h3>
+        <p style="color:var(--text-dim); margin-bottom:1rem;">These gamerules differ from the Minecraft 1.21 defaults.</p>
+        <div class="props-table-wrap">
+            <table id="gamerules-changed-table" class="props-table">
+                <thead>
+                    <tr>
+                        <th>Gamerule</th>
+                        <th>Value</th>
+                        <th>Default</th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {''.join(f"""<tr class="prop-changed">
+                        <td><code>{html.escape(g['display_key'])}</code></td>
+                        <td><strong>{html.escape(g['value'])}</strong></td>
+                        <td class="prop-default">{html.escape(str(g['default']))}</td>
+                        <td class="prop-explain">{html.escape(g['explanation'])}</td>
+                    </tr>""" for g in changed_gamerules)}
+                </tbody>
+            </table>
+        </div>
+
+        <h3 style="margin-top:2rem;">All Gamerules</h3>
+        <p style="color:var(--text-dim); margin-bottom:1rem;">Complete list from level.dat. Changed values are <span style="color:var(--accent);">highlighted</span>.</p>
+        <div class="props-full-wrap">
+            <table id="gamerules-full-table" class="props-table">
+                <thead>
+                    <tr>
+                        <th data-sort="text">Gamerule <span class="sort-arrow"></span></th>
+                        <th data-sort="text">Value <span class="sort-arrow"></span></th>
+                        <th data-sort="text">Default <span class="sort-arrow"></span></th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {''.join(f"""<tr class="{"prop-changed" if g['changed'] else ""}">
+                        <td><code>{html.escape(g['display_key'])}</code></td>
+                        <td>{("<strong>" + html.escape(g['value']) + "</strong>") if g['changed'] else html.escape(g['value'])}</td>
+                        <td class="prop-default">{html.escape(str(g['default']))}</td>
+                        <td class="prop-explain">{html.escape(g['explanation'])}</td>
+                    </tr>""" for g in gamerules)}
                 </tbody>
             </table>
         </div>
