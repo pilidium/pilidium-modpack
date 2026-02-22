@@ -2241,23 +2241,14 @@ td.num-cell {{
         <h2>Welcome to <span style="color:var(--accent)">Pilidium's</span> Local Minecraft Server</h2>
 
         <div style="margin:1.5rem 0; line-height:1.8;">
-            <p style="margin-bottom:1rem; color:var(--text);">A casual, modded Fabric 1.21.11 server built around exploration, quality-of-life, and having a good time. The world is shaped by <strong style="color:#ffaa00">Tectonic</strong> terrain generation with hundreds of custom structures scattered across the Overworld, a fully overhauled <strong style="color:#ff5555">Nether</strong> via Incendium, and new End content. Pick an <strong style="color:var(--accent2)">Origin</strong> with unique abilities, fast-travel with <strong style="color:#aa00aa">Waystones</strong>, brew drinks at the <strong style="color:#ffaa00">Brewery</strong>, and enjoy conveniences like tree-felling, crop right-click harvesting, per-player loot, and no anvil cost cap.</p>
+            <p style="margin-bottom:1rem; color:var(--text);">A casual, modded Fabric 1.21.11 server built around exploration, quality-of-life, and having a good time. The world is shaped by <strong style="color:#ffaa00">Tectonic</strong> terrain generation with hundreds of custom structures scattered across the Overworld, a fully overhauled <strong style="color:#ff5555">Nether</strong> via Incendium, and new <strong style="color:#ff55ff">End</strong> content. Pick an <strong style="color:var(--accent2)">Origin</strong> with unique abilities, fast-travel with <strong style="color:#aa00aa">Waystones</strong>, brew drinks at the <strong style="color:#ffaa00">Brewery</strong>, and enjoy conveniences like tree-felling, crop right-click harvesting, per-player loot, and no anvil cost cap.</p>
             <p style="margin-bottom:1rem; color:var(--text);">Non-consensual griefing/attacking is highly discouraged. We are a relatively peaceful bunch of people trying to enjoy the game in our own ways.</p>
             <p style="margin-bottom:0.5rem; color:var(--text-muted); font-size:0.9rem;">This dashboard lists every client and server mod with descriptions, all config files, server properties, active gamerules, player statistics, and a beginner's guide to get you started.</p>
             <div style="display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:1.25rem;">
                 <span class="badge" style="background:var(--hover-tint); border:1px solid var(--accent); color:var(--accent); padding:0.4rem 1rem; font-size:0.82rem;">TLauncher players can join</span>
                 <span class="badge" style="background:var(--hover-tint); border:1px solid var(--accent2); color:var(--accent2); padding:0.4rem 1rem; font-size:0.82rem;">Server backup every 2 hours</span>
-            </div>
-        </div>
-
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-top:2rem;">
-            <div class="stat-card">
-                <div class="num">{world_size_str}</div>
-                <div class="label">World Size</div>
-            </div>
-            <div class="stat-card">
-                <div class="num">{backup_size_str}</div>
-                <div class="label">Backup Size (Git)</div>
+                <span class="badge" style="background:var(--hover-tint); border:1px solid var(--accent); color:var(--accent); padding:0.4rem 1rem; font-size:0.82rem;">{world_size_str} world</span>
+                <span class="badge" style="background:var(--hover-tint); border:1px solid var(--accent2); color:var(--accent2); padding:0.4rem 1rem; font-size:0.82rem;">{backup_size_str} backup (git)</span>
             </div>
         </div>
     </div>
