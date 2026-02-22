@@ -2158,23 +2158,46 @@ td.num-cell {{
     .stats {{ grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.65rem; }}
     .stat-card {{ padding: 0.9rem 0.75rem; }}
     .stat-card .num {{ font-size: 1.6rem; }}
-    .tabs {{ border-radius: var(--radius) var(--radius) 0 0; }}
-    .tab {{ padding: 0.5rem 0.85rem; font-size: 0.75rem; }}
+    .tabs {{
+        border-radius: var(--radius) var(--radius) 0 0;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }}
+    .tab {{ padding: 0.5rem 0.85rem; font-size: 0.75rem; flex-shrink: 0; }}
     .tab-panel {{ padding: 1rem 0.85rem; border-radius: 0 0 var(--radius) var(--radius); }}
     .controls {{ gap: 0.5rem; }}
     .legend {{ gap: 0.4rem 1.25rem; font-size: 0.72rem; grid-template-columns: repeat(2, auto); }}
-    td {{ padding: 0.45rem 0.65rem; }}
+    td {{ padding: 0.45rem 0.65rem; font-size: 0.75rem; }}
+    td.mod-desc {{ min-width: 120px; }}
+    .config-header {{ flex-wrap: wrap; gap: 0.4rem; }}
+    .config-path {{ margin-left: 0; font-size: 0.65rem; }}
+    h2 {{ font-size: 1.1rem; }}
 }}
 @media (max-width: 480px) {{
     .container {{ padding: 0.5rem; }}
     .header {{ padding: 1rem; }}
-    h1 {{ font-size: 1.3rem; }}
-    .stats {{ grid-template-columns: repeat(2, 1fr); }}
+    h1 {{ font-size: 1.2rem; }}
+    .stats {{ grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }}
+    .stat-card .num {{ font-size: 1.3rem; }}
+    .stat-card .label {{ font-size: 0.6rem; }}
+    .stat-card {{ padding: 0.7rem 0.5rem; }}
     .tab {{ padding: 0.4rem 0.6rem; font-size: 0.7rem; }}
     .tab-panel {{ padding: 0.75rem 0.65rem; }}
-    .search-box {{ min-width: 150px; }}
+    .search-box {{ min-width: 0; width: 100%; flex: 1 1 100%; }}
+    .controls {{ flex-wrap: wrap; }}
     .header-content {{ flex-wrap: wrap; gap: 0.5rem; }}
     .theme-toggle {{ font-size: 0.68rem; padding: 0.3rem 0.6rem; }}
+    .legend {{ grid-template-columns: 1fr 1fr; gap: 0.35rem 0.75rem; font-size: 0.68rem; padding: 0.6rem 0.75rem; }}
+    /* Hide less-important table columns on small phones */
+    table th:nth-child(n+3),
+    table td:nth-child(n+3) {{ display: none; }}
+    td.mod-name {{ white-space: normal; word-break: break-word; }}
+    td.mod-desc {{ min-width: 0; }}
+    .config-content pre {{ font-size: 0.68rem; padding: 0.65rem; }}
+    h2 {{ font-size: 1rem; margin: 1.25rem 0 0.75rem; }}
+    h2 .count {{ font-size: 0.68rem; display: block; margin-left: 0; margin-top: 0.15rem; }}
 }}
 </style>
 </head>
