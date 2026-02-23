@@ -13,8 +13,6 @@ import glob
 import gzip
 import struct
 import io
-import urllib.request
-import urllib.error
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE = os.path.dirname(SCRIPT_DIR)  # instance root (one level above dashboard/)
@@ -32,93 +30,32 @@ OPS_FILE = os.path.join(SERVER_DIR, "ops.json")
 WHITELIST_FILE = os.path.join(SERVER_DIR, "whitelist.json")
 SERVER_PROPERTIES = os.path.join(SERVER_DIR, "server.properties")
 LEVEL_DAT = os.path.join(SERVER_DIR, "world", "level.dat")
-AI_CACHE_FILE = os.path.join(SCRIPT_DIR, "ai_cache.json")
 DATAPACK_DIR = os.path.join(SERVER_DIR, "world", "datapacks")
-OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
-OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "qwen2.5:14b")
+MOD_DATA_FILE = os.path.join(SCRIPT_DIR, "mod_data.json")
 
-# ── Mod knowledge base ──────────────────────────────────────────────────────
-# Maps mod "slug" (lowercase, stripped) → { description, side, required }
-# side: client / server / both
-# required: required / optional / library
-MOD_INFO = {
-    # ── Client mods ──
-    "bad packets":          {"desc": "Packet handling library for Fabric/Quilt mods", "side": "both", "req": "library"},
-    "balm":                 {"desc": "Abstraction layer / library used by BlayMappings mods (Waystones, etc.)", "side": "both", "req": "library"},
-    "betterf3":             {"desc": "Replaces the F3 debug screen with a customisable, more readable one", "side": "client", "req": "optional"},
-    "bobby":                {"desc": "Caches and renders chunks beyond server view-distance on the client", "side": "client", "req": "optional"},
-    "carry on":             {"desc": "Lets you pick up and carry tile-entities and mobs", "side": "both", "req": "optional"},
-    "chat heads":           {"desc": "Adds player head icons next to chat messages", "side": "client", "req": "optional"},
-    "chunk loaders":        {"desc": "Adds blocks that keep chunks loaded when you are away", "side": "both", "req": "optional"},
-    "cloth config api":     {"desc": "Configuration screen library used by many mods", "side": "both", "req": "library"},
-    "enchantment descriptions": {"desc": "Adds enchantment descriptions to tooltips", "side": "client", "req": "optional"},
-    "fabric api":           {"desc": "Essential hooks and interoperability layer for Fabric mods", "side": "both", "req": "required"},
-    "fabric language kotlin": {"desc": "Enables mods written in Kotlin on Fabric", "side": "both", "req": "library"},
-    "fallingtree":          {"desc": "Chop a whole tree by breaking a single log block", "side": "both", "req": "optional"},
-    "iris shaders":         {"desc": "Shader pack loader compatible with OptiFine shaders, works with Sodium", "side": "client", "req": "optional"},
-    "just enough items (jei)": {"desc": "Item and recipe browser / lookup GUI", "side": "both", "req": "optional"},
-    "lootr":                {"desc": "Makes loot containers per-player so everyone gets their own loot", "side": "both", "req": "required"},
-    "mod menu":             {"desc": "Adds an in-game mod list screen with config access", "side": "client", "req": "optional"},
-    "origins: legacy":      {"desc": "Choose an Origin at the start that gives unique abilities & weaknesses", "side": "both", "req": "required"},
-    "text placeholder api": {"desc": "Server-side text placeholder / formatting API", "side": "both", "req": "library"},
-    "prickle":              {"desc": "Library providing shared utilities for BlayMappings mods", "side": "both", "req": "library"},
-    "promenade":            {"desc": "Adds new biomes, mobs, and building blocks to world generation", "side": "both", "req": "required"},
-    "sodium":               {"desc": "High-performance rendering engine replacement — massive FPS improvements", "side": "client", "req": "required"},
-    "supermartijn642's config lib": {"desc": "Configuration library for SuperMartijn642's mods", "side": "both", "req": "library"},
-    "supermartijn642's core lib":   {"desc": "Core library for SuperMartijn642's mods", "side": "both", "req": "library"},
-    "waystones":            {"desc": "Adds waystones for fast-travel teleportation between locations", "side": "both", "req": "required"},
-    "wthit":                {"desc": "\"What The Hell Is That\" – shows info tooltip when looking at blocks/entities", "side": "both", "req": "optional"},
-    "xaero's minimap":      {"desc": "Real-time minimap overlay with waypoints", "side": "client", "req": "optional"},
-    "xaero's world map":    {"desc": "Full-screen world map companion to Xaero's Minimap", "side": "client", "req": "optional"},
-    "yetanotherconfiglib (yacl)": {"desc": "Configuration screen library (YACL)", "side": "both", "req": "library"},
-    "zoomify":              {"desc": "Adds a configurable zoom key (like OptiFine zoom)", "side": "client", "req": "optional"},
 
-    # ── Server-only mods ──
-    "additional structures":       {"desc": "Adds many new structures to world generation", "side": "server", "req": "required"},
-    "chunky":                      {"desc": "Pre-generates world chunks to reduce lag on exploration", "side": "server", "req": "optional"},
-    "explorify":                   {"desc": "Adds dozens of small vanilla-style structures to the world", "side": "server", "req": "required"},
-    "incendium":                   {"desc": "Complete overhaul of Nether world generation with structures & biomes", "side": "server", "req": "required"},
-    "moogs end structures":        {"desc": "Adds new structures to the End dimension", "side": "server", "req": "required"},
-    "moogs missing villages":      {"desc": "Adds village variants for biomes that lack them", "side": "server", "req": "required"},
-    "moogs nether structures":     {"desc": "Adds new structures to the Nether dimension", "side": "server", "req": "required"},
-    "moogs soaring structures":    {"desc": "Adds floating/sky structures to the Overworld", "side": "server", "req": "required"},
-    "moogs temples reimagined":    {"desc": "Revamps vanilla temple structures", "side": "server", "req": "required"},
-    "moogs voyager structures":    {"desc": "Adds exploration-focused structures across dimensions", "side": "server", "req": "required"},
-    "no expensive":                {"desc": "Removes the 'Too Expensive' anvil cap", "side": "server", "req": "optional"},
-    "structory":                   {"desc": "Adds small vanilla-style structures and ruins to the world", "side": "server", "req": "required"},
-    "structory towers":            {"desc": "Adds tower structures as an expansion to Structory", "side": "server", "req": "required"},
-    "choicetheorem's overhauled village": {"desc": "Overhauls villages with new designs for every biome", "side": "server", "req": "required"},
-    "abridged":                    {"desc": "Shortens & cleans up server join/leave messages", "side": "server", "req": "optional"},
-    "alternate current":           {"desc": "Efficient redstone dust implementation for better server performance", "side": "server", "req": "required"},
-    "antixray":                    {"desc": "Hides ores from X-ray texture packs / cheats", "side": "server", "req": "required"},
-    "beacon range extender":       {"desc": "Increases the effective range of beacon effects", "side": "server", "req": "optional"},
-    "c2me":                        {"desc": "Concurrent Chunk Management Engine — multi-threaded chunk loading", "side": "server", "req": "required"},
-    "chest protection":            {"desc": "Protects chests from being opened/broken by non-owners", "side": "server", "req": "optional"},
-    "cobweb":                      {"desc": "Library for mod configuration and utilities", "side": "server", "req": "library"},
-    "collective":                  {"desc": "Shared library for Serilum's mods", "side": "server", "req": "library"},
-    "config backuper":             {"desc": "Automatically backs up server config files", "side": "server", "req": "optional"},
-    "cristellib":                  {"desc": "Library for Cristel's mods (CTOV, etc.)", "side": "server", "req": "library"},
-    "dungeons and taverns":        {"desc": "Adds dungeon and tavern structures to world generation", "side": "server", "req": "required"},
-    "easyauth":                    {"desc": "Server-side authentication system (login/register)", "side": "server", "req": "required"},
-    "fastback":                    {"desc": "Server-side world backup manager using git-based snapshots", "side": "server", "req": "optional"},
-    "ferritecore":                 {"desc": "Reduces RAM usage through memory optimisations", "side": "both", "req": "required"},
-    "forge config api port":       {"desc": "Ports Forge's configuration API to Fabric", "side": "server", "req": "library"},
-    "harvest with ease":           {"desc": "Right-click crops to harvest and auto-replant", "side": "server", "req": "optional"},
-    "krypton":                     {"desc": "Optimises Minecraft networking stack for better performance", "side": "server", "req": "required"},
-    "lithium":                     {"desc": "General-purpose server optimisation mod (game logic, AI, etc.)", "side": "server", "req": "required"},
-    "lithostitched":               {"desc": "Library for data-driven worldgen stitching", "side": "server", "req": "library"},
-    "moogs structure lib":         {"desc": "Library used by all Moogs structure mods", "side": "server", "req": "library"},
-    "packetfixer":                 {"desc": "Fixes packet size issues to prevent disconnects", "side": "server", "req": "required"},
-    "polymer":                     {"desc": "Server-side mod framework — lets server mods work without client mods", "side": "server", "req": "library"},
-    "skin restorer":               {"desc": "Restores player skins on offline/hybrid servers", "side": "server", "req": "optional"},
-    "spark":                       {"desc": "Performance profiler and monitoring tool", "side": "server", "req": "optional"},
-    "sparse structures":           {"desc": "Adjusts vanilla structure spacing to reduce clustering", "side": "server", "req": "optional"},
-    "tectonic":                    {"desc": "Overhauls terrain generation with dramatic landscapes", "side": "server", "req": "required"},
-    "towns and towers":            {"desc": "Adds pillager outpost and village structure variants", "side": "server", "req": "required"},
-    "villager names":              {"desc": "Gives villagers random human names", "side": "server", "req": "optional"},
-    "worldedit":                   {"desc": "In-game map editor for large-scale building and terraforming", "side": "server", "req": "optional"},
-    "brewery":                     {"desc": "Adds an alcohol brewing system with cauldrons, barrels, and aging", "side": "server", "req": "optional"},
-}
+# ── External mod data (from fetch_mod_data.py) ─────────────────────────────
+_mod_data_cache = None
+
+
+def load_mod_data():
+    """Load mod/datapack info from mod_data.json (generated by fetch_mod_data.py)."""
+    global _mod_data_cache
+    if _mod_data_cache is not None:
+        return _mod_data_cache
+    if not os.path.isfile(MOD_DATA_FILE):
+        print(f"[!] {MOD_DATA_FILE} not found.")
+        print(f"    Run:  python3 fetch_mod_data.py")
+        _mod_data_cache = {"mods": {}, "datapacks": {}, "config_map": {}}
+        return _mod_data_cache
+    try:
+        with open(MOD_DATA_FILE) as f:
+            _mod_data_cache = json.load(f)
+    except (json.JSONDecodeError, OSError) as e:
+        print(f"[!] Error reading {MOD_DATA_FILE}: {e}")
+        _mod_data_cache = {"mods": {}, "datapacks": {}, "config_map": {}}
+    return _mod_data_cache
+
 
 # ── Map config files → mod names ────────────────────────────────────────────
 CONFIG_TO_MOD = {
@@ -250,173 +187,6 @@ GUIDE_COVERED_DATAPACKS = {
 }
 
 
-# ── AI helper functions ─────────────────────────────────────────────────────
-
-def load_ai_cache():
-    """Load the AI result cache from disk."""
-    if os.path.isfile(AI_CACHE_FILE):
-        try:
-            with open(AI_CACHE_FILE) as f:
-                return json.load(f)
-        except (json.JSONDecodeError, OSError):
-            pass
-    return {"mods": {}, "datapacks": {}}
-
-
-def save_ai_cache(cache):
-    """Persist the AI result cache to disk."""
-    try:
-        with open(AI_CACHE_FILE, "w") as f:
-            json.dump(cache, f, indent=2)
-    except OSError as e:
-        print(f"  [AI] Warning: could not save cache: {e}")
-
-
-_ollama_ok = None  # cached result of availability check
-
-
-def _ollama_available():
-    """Check if Ollama is reachable (cached after first call)."""
-    global _ollama_ok
-    if _ollama_ok is not None:
-        return _ollama_ok
-    try:
-        req = urllib.request.Request(f"{OLLAMA_URL}/api/tags")
-        with urllib.request.urlopen(req, timeout=5) as resp:
-            data = json.loads(resp.read())
-            models = [m.get("name", "") for m in data.get("models", [])]
-            _ollama_ok = len(models) > 0
-    except Exception:
-        _ollama_ok = False
-    return _ollama_ok
-
-
-def query_ollama(prompt):
-    """Send a prompt to the local Ollama instance and return the response text."""
-    payload = json.dumps({
-        "model": OLLAMA_MODEL,
-        "prompt": prompt,
-        "stream": False,
-        "format": "json",
-        "options": {"temperature": 0.3},
-    }).encode()
-    req = urllib.request.Request(
-        f"{OLLAMA_URL}/api/generate",
-        data=payload,
-        headers={"Content-Type": "application/json"},
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            result = json.loads(resp.read())
-            return result.get("response", "")
-    except Exception as e:
-        print(f"  [AI] Ollama request failed: {e}")
-        return None
-
-
-def ai_get_mod_info(name, jar_filename, side_hint="unknown"):
-    """Query AI for mod information. Returns dict or None. Checks cache first."""
-    cache = load_ai_cache()
-    key = name.lower().strip()
-
-    if key in cache.get("mods", {}):
-        return cache["mods"][key]
-
-    if not _ollama_available():
-        return None
-
-    prompt = (
-        "You are a Minecraft Fabric modding expert. "
-        "I need information about this Fabric mod.\n\n"
-        f"Mod name: {name}\n"
-        f"Jar filename: {jar_filename}\n"
-        f"Installed on: {side_hint} side\n\n"
-        "Return ONLY a JSON object with these exact fields:\n"
-        "{\n"
-        '  "desc": "One concise sentence describing what this mod does for players (max 120 chars)",\n'
-        '  "side": "client" or "server" or "both",\n'
-        '  "req": "required" or "optional" or "library",\n'
-        '  "guide_section": one of "first-join", "gameplay", "travel", "world-gen", "ui", "datapacks", "behind-scenes", or null,\n'
-        '  "guide_name": "Short display name for beginner guide entry",\n'
-        '  "guide_body": "2-3 sentences for someone new to the server. Use <em> for emphasis. Be specific.",\n'
-        '  "guide_example": "A concrete example or null"\n'
-        "}\n\n"
-        "Rules:\n"
-        '- "req" = "library" for API/library mods players never interact with\n'
-        '- "req" = "required" for mods that add content players must deal with\n'
-        '- "req" = "optional" for quality-of-life mods\n'
-        '- "guide_section" = null for library mods and invisible server-side mods\n'
-        '- For performance mods use "behind-scenes"\n'
-        '- For world generation mods use "world-gen"\n'
-        "- Keep everything concise and beginner-friendly"
-    )
-
-    print(f"  [AI] Querying Ollama for mod: {name} ...")
-    raw = query_ollama(prompt)
-    if not raw:
-        return None
-    try:
-        data = json.loads(raw)
-        for field in ["desc", "side", "req"]:
-            if field not in data:
-                return None
-        if data["side"] not in ("client", "server", "both"):
-            data["side"] = side_hint if side_hint != "unknown" else "both"
-        if data["req"] not in ("required", "optional", "library"):
-            data["req"] = "optional"
-        # Sanitise guide_section
-        valid_sections = {"first-join", "gameplay", "travel", "world-gen", "ui", "datapacks", "behind-scenes"}
-        if data.get("guide_section") not in valid_sections:
-            data["guide_section"] = None
-        cache.setdefault("mods", {})[key] = data
-        save_ai_cache(cache)
-        print(f"  [AI] Got info for {name}: {data['desc'][:60]}...")
-        return data
-    except (json.JSONDecodeError, KeyError):
-        return None
-
-
-def ai_get_datapack_info(pack_name):
-    """Query AI for datapack information. Returns dict or None. Checks cache first."""
-    cache = load_ai_cache()
-    key = pack_name.lower().strip()
-
-    if key in cache.get("datapacks", {}):
-        return cache["datapacks"][key]
-
-    if not _ollama_available():
-        return None
-
-    prompt = (
-        "You are a Minecraft datapack expert. "
-        "I need info about this datapack on a Fabric 1.21.11 server.\n\n"
-        f"Datapack name/folder: {pack_name}\n\n"
-        "Return ONLY a JSON object:\n"
-        "{\n"
-        '  "desc": "One concise sentence describing what this datapack does",\n'
-        '  "guide_name": "Short display name for the beginner guide",\n'
-        '  "guide_body": "2-3 sentences for beginners. Use <em> for emphasis.",\n'
-        '  "guide_example": "A concrete example or null"\n'
-        "}\n\n"
-        "Keep it concise and beginner-friendly."
-    )
-
-    print(f"  [AI] Querying Ollama for datapack: {pack_name} ...")
-    raw = query_ollama(prompt)
-    if not raw:
-        return None
-    try:
-        data = json.loads(raw)
-        if "desc" not in data or "guide_name" not in data:
-            return None
-        cache.setdefault("datapacks", {})[key] = data
-        save_ai_cache(cache)
-        print(f"  [AI] Got info for datapack {pack_name}")
-        return data
-    except (json.JSONDecodeError, KeyError):
-        return None
-
-
 def guide_card_html(name, body, example=None):
     """Create a single guide card HTML string."""
     parts = ['            <div class="guide-card">']
@@ -432,12 +202,12 @@ def guide_card_html(name, body, example=None):
 
 
 def collect_datapacks():
-    """Scan the datapacks directory and return info dicts (with AI for unknowns)."""
+    """Scan the datapacks directory and return info dicts (from mod_data.json)."""
     datapacks = []
     if not os.path.isdir(DATAPACK_DIR):
         return datapacks
 
-    has_ollama = _ollama_available()
+    dp_data = load_mod_data().get("datapacks", {})
 
     for entry in sorted(os.listdir(DATAPACK_DIR)):
         full_path = os.path.join(DATAPACK_DIR, entry)
@@ -462,52 +232,25 @@ def collect_datapacks():
 
         if is_covered:
             dp["covered"] = True
-        elif has_ollama:
-            # Query AI for unknown datapacks
-            info = ai_get_datapack_info(entry)
+        else:
+            # Look up in mod_data.json
+            info = dp_data.get(key, {})
             if info:
                 dp["desc"] = info.get("desc", "")
-                dp["guide_name"] = info.get("guide_name")
-                dp["guide_body"] = info.get("guide_body")
-                dp["guide_example"] = info.get("guide_example")
 
         datapacks.append(dp)
     return datapacks
 
 
 def build_ai_guide_cards(client_mods, server_mods, datapacks):
-    """Build a dict of section_id -> HTML string for AI-generated guide cards."""
+    """Build a dict of section_id -> HTML string for guide cards from mod_data.json.
+    Currently returns empty sections — all known mods are in GUIDE_COVERED_MODS."""
     sections = {
         "first-join": [], "gameplay": [], "travel": [],
         "world-gen": [], "ui": [], "datapacks": [], "behind-scenes": [],
     }
 
-    # Mods with AI guide info
-    for mod in client_mods + server_mods:
-        key = mod["name"].lower().strip()
-        if key in GUIDE_COVERED_MODS:
-            continue
-        section = mod.get("ai_guide_section")
-        if not section or section not in sections:
-            continue
-        card = guide_card_html(
-            mod.get("ai_guide_name", mod["name"]),
-            mod.get("ai_guide_body", mod.get("desc", "")),
-            mod.get("ai_guide_example"),
-        )
-        sections[section].append(card)
-
-    # Datapacks with AI guide info
-    for dp in datapacks:
-        if dp.get("covered"):
-            continue
-        if dp.get("guide_name"):
-            card = guide_card_html(
-                dp["guide_name"],
-                dp.get("guide_body", dp.get("desc", "")),
-                dp.get("guide_example"),
-            )
-            sections["datapacks"].append(card)
+    # Future: if mod_data.json grows guide_section etc. fields, they go here
 
     # Return joined HTML: newline-prefixed when non-empty, empty string otherwise
     return {k: ('\n' + '\n'.join(v) if v else '') for k, v in sections.items()}
@@ -549,17 +292,18 @@ def version_from_jar(jar):
 
 
 def lookup_mod_info(name):
-    """Look up mod info from the knowledge base."""
+    """Look up mod info from mod_data.json."""
+    mods = load_mod_data().get("mods", {})
     key = name.lower().strip()
-    if key in MOD_INFO:
-        return MOD_INFO[key]
+    if key in mods:
+        return mods[key]
     # Fuzzy: try partial matching
-    for k, v in MOD_INFO.items():
+    for k, v in mods.items():
         if k in key or key in k:
             return v
     # Extra fuzzy: strip punctuation and compare
     clean_key = re.sub(r'[^a-z0-9 ]', '', key)
-    for k, v in MOD_INFO.items():
+    for k, v in mods.items():
         clean_k = re.sub(r'[^a-z0-9 ]', '', k)
         if clean_k in clean_key or clean_key in clean_k:
             return v
@@ -579,6 +323,15 @@ JAR_NAME_OVERRIDES = {
     "Structory_Towers_1.21.x_v1.0.15.jar": ("Structory Towers", "1.0.15"),
     "supermartijn642configlib-1.1.8-fabric-mc1.21.11.jar": ("SuperMartijn642's Config Lib", "1.1.8"),
     "supermartijn642corelib-1.1.20-fabric-mc1.21.11.jar": ("SuperMartijn642's Core Lib", "1.1.20"),
+    "MoogsEndStructures-1.21-2.0.1.jar": ("Moogs End Structures", "2.0.1"),
+    "MoogsMissingVillages-1.21-2.0.0.jar": ("Moogs Missing Villages", "2.0.0"),
+    "MoogsNetherStructures-1.21-2.0.31.jar": ("Moogs Nether Structures", "2.0.31"),
+    "MoogsSoaringStructures-1.21-2.0.2.jar": ("Moogs Soaring Structures", "2.0.2"),
+    "MoogsTemplesReimagined-1.21-1.1.0.jar": ("Moogs Temples Reimagined", "1.1.0"),
+    "MoogsVoyagerStructures-1.21-5.0.5.jar": ("Moogs Voyager Structures", "5.0.5"),
+    "ForgeConfigAPIPort-v21.11.1-mc1.21.11-Fabric.jar": ("Forge Config API Port", "21.11.1"),
+    "worldedit-mod-7.4.0.jar": ("WorldEdit", "7.4.0"),
+    "AdditionalStructures-1.21-(v.5.2.0-FABRIC)-dev.jar": ("Additional Structures", "5.2.0"),
 }
 
 
@@ -661,10 +414,8 @@ def collect_client_mods():
                 version = version_from_jar(jar)
 
             info = lookup_mod_info(name)
-            if not info:
-                info = ai_get_mod_info(name, jar, "client")
             if info:
-                desc = info["desc"]
+                desc = info.get("desc", "")
                 side = info.get("side", "client")
                 req = info.get("req", "unknown")
             else:
@@ -686,10 +437,6 @@ def collect_client_mods():
                 "desc": desc,
                 "side": side,
                 "req": req,
-                "ai_guide_section": info.get("guide_section"),
-                "ai_guide_name": info.get("guide_name"),
-                "ai_guide_body": info.get("guide_body"),
-                "ai_guide_example": info.get("guide_example"),
             })
     return mods
 
@@ -713,23 +460,21 @@ def collect_server_mods():
 
         info = lookup_mod_info(name)
         if not info:
-            # Try with the full jar name for tricky cases
-            for k, v in MOD_INFO.items():
+            # Try fuzzy match with jar filename against mod_data keys
+            mods_db = load_mod_data().get("mods", {})
+            for k, v in mods_db.items():
                 if k.replace(" ", "").replace("'", "") in jar.lower().replace("-", "").replace("_", ""):
                     info = v
                     break
 
-        if not info:
-            info = ai_get_mod_info(name, jar, "server")
         if info:
-            desc = info["desc"]
+            desc = info.get("desc", "")
             side = info.get("side", "server")
             req = info.get("req", "unknown")
         else:
             desc = ""
             side = "server"
             req = "unknown"
-            info = {}
 
         # Server mods can only be "server" or "both"
         if side == "client":
@@ -744,10 +489,6 @@ def collect_server_mods():
             "desc": desc,
             "side": side,
             "req": req,
-            "ai_guide_section": info.get("guide_section"),
-            "ai_guide_name": info.get("guide_name"),
-            "ai_guide_body": info.get("guide_body"),
-            "ai_guide_example": info.get("guide_example"),
         })
     return mods
 
@@ -3058,13 +2799,14 @@ document.addEventListener('keydown', e => {{
 
 
 if __name__ == "__main__":
-    # Check Ollama availability
-    if _ollama_available():
-        print(f"[AI] Ollama available (model: {OLLAMA_MODEL})")
+    # Load mod data from fetch_mod_data.py output
+    md = load_mod_data()
+    mod_count = len(md.get("mods", {}))
+    dp_count = len(md.get("datapacks", {}))
+    if mod_count:
+        print(f"[Data] Loaded {mod_count} mods, {dp_count} datapacks from mod_data.json")
     else:
-        print(f"[AI] Ollama not available at {OLLAMA_URL}")
-        print(f"     To enable AI auto-fill: ollama pull {OLLAMA_MODEL}")
-        print(f"     Unknown mods/datapacks will have empty descriptions.")
+        print("[!] No mod data loaded. Run fetch_mod_data.py first for descriptions.")
     output = os.path.join(SCRIPT_DIR, "index.html")
     with open(output, "w") as f:
         f.write(generate_html())
