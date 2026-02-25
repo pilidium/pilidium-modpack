@@ -38,7 +38,7 @@ MODRINTH_API = "https://api.modrinth.com/v2"
 MODRINTH_HEADERS = {"User-Agent": "pilidium-modpack-dashboard/1.0 (github.com/pilidium/pilidium-modpack)"}
 
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
-OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "qwen2.5:14b")
+OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "qwen2.5")
 
 # ── Jar-name overrides for server mods with non-standard filenames ──────────
 # Maps jar filename → (display name, version)
@@ -534,13 +534,18 @@ def main():
     packs = scan_datapacks()
     for pack in packs:
         key = pack["name"].lower().strip()
-        if key not in data["datapacks"]:
+        existing = data["datapacks"].get(key, {})
+        needs_desc = not existing or not existing.get("desc")
+        if needs_desc:
             if has_ollama:
                 info = ollama_datapack_info(pack["name"])
                 if info:
                     data["datapacks"][key] = info
                     print(f"  [OK] Datapack {pack['name']}: {info['desc'][:60]}...")
                     continue
+            data["datapacks"][key] = {"desc": "", "source": "unknown"}
+            print(f"  [--] Datapack {pack['name']}: no info")
+        elif key not in data["datapacks"]:
             data["datapacks"][key] = {"desc": "", "source": "unknown"}
             print(f"  [--] Datapack {pack['name']}: no info")
 

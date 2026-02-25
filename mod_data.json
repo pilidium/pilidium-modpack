@@ -1459,44 +1459,48 @@
   },
   "datapacks": {
     "vanillatweaks_c116305_mc1.21-1.21.11": {
-      "desc": "",
-      "source": "unknown"
+      "desc": "This datapack enhances various vanilla Minecraft mechanics and features for better gameplay.",
+      "source": "ollama"
     },
     "afk display": {
-      "desc": "",
-      "source": "unknown"
+      "desc": "This datapack adds an AFK display feature to your Minecraft game, showing when players are away from their keyboard.",
+      "source": "ollama"
     },
     "back": {
-      "desc": "",
-      "source": "unknown"
+      "desc": "This datapack adds commands to teleport players back to their last known location.",
+      "source": "ollama"
     },
     "graves": {
-      "desc": "",
-      "source": "unknown"
+      "desc": "This datapack adds customizable grave markers to player deaths.",
+      "source": "ollama"
     },
     "orb_of_origin_recipe": {
-      "desc": "",
-      "source": "unknown"
+      "desc": "This datapack adds a new recipe for crafting an Orb of Origin, which is likely a special item with unique properties.",
+      "source": "ollama"
     },
     "redstone rotation wrench": {
-      "desc": "",
-      "source": "unknown"
+      "desc": "This datapack adds a special wrench that can rotate redstone components in Minecraft.",
+      "source": "ollama"
     },
     "terracotta rotation wrench": {
-      "desc": "",
-      "source": "unknown"
+      "desc": "This datapack adds a special wrench that allows players to rotate terracotta blocks easily.",
+      "source": "ollama"
     },
     "tpa": {
-      "desc": "",
-      "source": "unknown"
+      "desc": "This datapack enables the 'Teleport to Player' command for easy player teleportation on the server.",
+      "source": "ollama"
     },
     "villager workstation highlights": {
-      "desc": "",
-      "source": "unknown"
+      "desc": "This datapack highlights villagers in your Minecraft world for easier identification.",
+      "source": "ollama"
     },
     "xp bottling": {
-      "desc": "",
-      "source": "unknown"
+      "desc": "This datapack adds a new block that allows you to bottle experience into bottles for easy storage and transportation.",
+      "source": "ollama"
+    },
+    "fix-promenade": {
+      "desc": "This datapack fixes issues with the Promenade update in Minecraft.",
+      "source": "ollama"
     }
   },
   "config_map": {
@@ -1641,8 +1645,11 @@
       "promenade.json",
       "skinrestorer/config.json",
       "skinrestorer/mojang_profile_cache.json",
+      "spark/activity.json",
       "spark/config.json",
       "spark/tmp/about.txt",
+      "spark/tmp/spark-315b54d221761-libasyncProfiler.so.tmp",
+      "spark/tmp/spark-316bebf99c1d7-profile-data.jfr.tmp",
       "sparsestructures.json5",
       "tectonic.json",
       "towns_and_towers/structure_enable_or_disable_new.json5",
