@@ -142,7 +142,7 @@ def push_data_files(files):
     for filename, content in files.items():
         r = subprocess.run(
             ["git", "hash-object", "-w", "--stdin"],
-            input=content.encode(),
+            input=content,
             capture_output=True, text=True, cwd=repo,
         )
         if r.returncode != 0:
