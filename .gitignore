@@ -1,2 +1,5 @@
 __pycache__/
 ai_cache.json
+.last_data_hash
+data.json
+configs.json

@@ -24,12 +24,12 @@ import urllib.parse
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE = os.path.dirname(SCRIPT_DIR)
 
+SERVER_DIR = os.path.expanduser("~/SquidServers/pilidium")
 CLIENT_MODS = os.path.join(BASE, "minecraft", "mods")
-SERVER_MODS = os.path.join(BASE, "server", "mods")
+SERVER_MODS = os.path.join(SERVER_DIR, "mods")
 CLIENT_INDEX = os.path.join(CLIENT_MODS, ".index")
 CLIENT_CONFIG = os.path.join(BASE, "minecraft", "config")
-SERVER_CONFIG = os.path.join(BASE, "server", "config")
-SERVER_DIR = os.path.join(BASE, "server")
+SERVER_CONFIG = os.path.join(SERVER_DIR, "config")
 DATAPACK_DIR = os.path.join(SERVER_DIR, "world", "datapacks")
 
 OUTPUT_FILE = os.path.join(SCRIPT_DIR, "mod_data.json")
