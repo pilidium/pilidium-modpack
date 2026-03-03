@@ -1159,8 +1159,8 @@ def generate_html():
 
     # World / backup sizes  (du is much faster than os.walk for large dirs)
     world_dir = os.path.join(SERVER_DIR, "world")
-    backup_dir = os.path.join(SERVER_DIR, "world", ".git")
-    world_only_bytes = _get_dir_size(world_dir, exclude=".git")
+    backup_dir = os.path.expanduser("~/SquidServers/pilidium-backups")
+    world_only_bytes = _get_dir_size(world_dir)
     backup_size_bytes = _get_dir_size(backup_dir)
     world_size_str = _format_size(world_only_bytes)
     backup_size_str = _format_size(backup_size_bytes)

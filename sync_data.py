@@ -65,8 +65,8 @@ def collect_all():
 
     # World / backup sizes
     world_dir = os.path.join(SERVER_DIR, "world")
-    backup_dir = os.path.join(SERVER_DIR, "world", ".git")
-    world_size = _format_size(_get_dir_size(world_dir, exclude=".git"))
+    backup_dir = os.path.expanduser("~/SquidServers/pilidium-backups")
+    world_size = _format_size(_get_dir_size(world_dir))
     backup_size = _format_size(_get_dir_size(backup_dir))
 
     now = datetime.now(timezone.utc).isoformat()
