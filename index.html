@@ -462,7 +462,7 @@ td.num-cell { text-align: right; font-variant-numeric: tabular-nums; }
                 <span class="badge" style="background:var(--hover-tint); border:1px solid var(--accent); color:var(--accent); padding:0.4rem 1rem; font-size:0.82rem;">TLauncher players can join</span>
                 <span class="badge" style="background:var(--hover-tint); border:1px solid var(--accent2); color:var(--accent2); padding:0.4rem 1rem; font-size:0.82rem;">Server backup every 2 hours</span>
                 <span class="badge" id="badge-world" style="background:var(--hover-tint); border:1px solid var(--accent); color:var(--accent); padding:0.4rem 1rem; font-size:0.82rem;">&mdash; world</span>
-                <span class="badge" id="badge-backup" style="background:var(--hover-tint); border:1px solid var(--accent2); color:var(--accent2); padding:0.4rem 1rem; font-size:0.82rem;">&mdash; backup (git)</span>
+                <span class="badge" id="badge-backup" style="background:var(--hover-tint); border:1px solid var(--accent2); color:var(--accent2); padding:0.4rem 1rem; font-size:0.82rem;">&mdash; backup</span>
             </div>
         </div>
     </div>
@@ -795,7 +795,7 @@ function renderStats() {
     document.getElementById('stat-scfg').textContent = h.server_config_count;
     document.getElementById('stat-players').textContent = h.player_count;
     document.getElementById('badge-world').textContent = h.world_size + ' world';
-    document.getElementById('badge-backup').textContent = h.backup_size + ' backup (git)';
+    document.getElementById('badge-backup').textContent = h.backup_size + ' backup';
 }
 
 function renderMods(tbodyId, mods, countId) {
