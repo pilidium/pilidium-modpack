@@ -2,11 +2,11 @@
 """
 Syncs Minecraft server data to GitHub for the Vercel-hosted dashboard.
 
-Generates data.json + configs.json, pushes to the 'data' branch,
-and purges the jsDelivr CDN cache.
+Generates data.json + configs.json and pushes to the 'data' branch.
+The frontend fetches from raw.githubusercontent.com (~5 min cache).
 
 Usage:
-  python3 sync_data.py            # Generate + push + purge
+  python3 sync_data.py            # Generate + push
   python3 sync_data.py --local    # Generate local files only (no push)
 
 Cron (every 5 minutes):
@@ -23,7 +23,6 @@ import sys
 import json
 import subprocess
 import hashlib
-import urllib.request
 from datetime import datetime, timezone
 
 # Ensure imports work regardless of CWD
@@ -188,19 +187,6 @@ def push_data_files(files):
     return True
 
 
-def purge_cdn():
-    """Purge jsDelivr CDN cache for both data files."""
-    for fname in ("data.json", "configs.json"):
-        url = f"https://purge.jsdelivr.net/gh/{GITHUB_REPO}@{DATA_BRANCH}/{fname}"
-        try:
-            req = urllib.request.Request(url)
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                body = resp.read().decode()
-            print(f"[OK] CDN purged {fname}")
-        except Exception as e:
-            print(f"[!] CDN purge failed for {fname}: {e}")
-
-
 def main():
     local_only = "--local" in sys.argv
     ts = datetime.now().strftime("%H:%M:%S")
@@ -238,12 +224,10 @@ def main():
 
     # ── Push ────────────────────────────────────────────────────────────
     if not local_only:
-        ok = push_data_files({
+        push_data_files({
             "data.json": data_json,
             "configs.json": configs_json,
         })
-        if ok:
-            purge_cdn()
 
     # ── Save hash ───────────────────────────────────────────────────────
     with open(HASH_FILE, "w") as f:

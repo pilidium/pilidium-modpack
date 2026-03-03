@@ -1455,6 +1455,125 @@
       "source": "modrinth",
       "_jar": "worldedit-mod-7.4.0.jar",
       "_side_hint": "server"
+    },
+    "advanced netherite": {
+      "modrinth_id": "CFX9ftUJ",
+      "slug": "advanced-netherite",
+      "title": "Advanced Netherite",
+      "desc": "A vanilla and add-on friendly, open-source mod that adds in more tiers of Netherite!",
+      "side": "both",
+      "req": "library",
+      "categories": [
+        "adventure",
+        "equipment",
+        "library"
+      ],
+      "icon_url": "https://cdn.modrinth.com/data/CFX9ftUJ/a6ab22b94673ec7f080ab893bd3d120db7fa05c3_96.webp",
+      "source_url": "https://github.com/Autovw/AdvancedNetherite",
+      "wiki_url": "https://github.com/Autovw/AdvancedNetherite/wiki",
+      "issues_url": "https://github.com/Autovw/AdvancedNetherite/issues",
+      "source": "modrinth",
+      "_jar": "advancednetherite-fabric-2.3.1-1.21.11.jar",
+      "_side_hint": "client"
+    },
+    "functional armor trims": {
+      "modrinth_id": "7RjmQ2PI",
+      "slug": "functional_trims",
+      "title": "Functional Armor Trims",
+      "desc": "Adds small but meaningful effects to wearing armor trims of different materials",
+      "side": "both",
+      "req": "optional",
+      "categories": [
+        "equipment",
+        "game-mechanics",
+        "utility",
+        "decoration",
+        "food",
+        "magic",
+        "mobs"
+      ],
+      "icon_url": "https://cdn.modrinth.com/data/7RjmQ2PI/ab90d8808ec0873a85b3d048b2ffc4d7c600e412_96.webp",
+      "source_url": "https://github.com/RubberToe-06/functional_trims",
+      "wiki_url": null,
+      "issues_url": "https://github.com/RubberToe-06/functional_trims/issues",
+      "source": "modrinth",
+      "_jar": "functional_trims-2.0.1-(1.21.11).jar",
+      "_side_hint": "client"
+    },
+    "additionalentityattributes": {
+      "modrinth_id": "6oFu5eHi",
+      "slug": "additionalentityattributes",
+      "title": "Additional Entity Attributes",
+      "desc": "Adds additional attributes for players and other entities, mainly for used in other mods",
+      "side": "both",
+      "req": "library",
+      "categories": [
+        "library",
+        "game-mechanics",
+        "utility"
+      ],
+      "icon_url": "https://cdn.modrinth.com/data/6oFu5eHi/074f8b00de90664d7f33da0bd1a85c5b7e64b0f2_96.webp",
+      "source_url": "https://github.com/DaFuqs/AdditionalEntityAttributes/",
+      "wiki_url": null,
+      "issues_url": "https://github.com/DaFuqs/AdditionalEntityAttributes/issues",
+      "source": "modrinth",
+      "_jar": "additionalentityattributes-fabric-2.2.1+1.21.11.jar",
+      "_side_hint": "server"
+    },
+    "advancednetherite": {
+      "modrinth_id": "CFX9ftUJ",
+      "slug": "advanced-netherite",
+      "title": "Advanced Netherite",
+      "desc": "A vanilla and add-on friendly, open-source mod that adds in more tiers of Netherite!",
+      "side": "both",
+      "req": "library",
+      "categories": [
+        "adventure",
+        "equipment",
+        "library"
+      ],
+      "icon_url": "https://cdn.modrinth.com/data/CFX9ftUJ/a6ab22b94673ec7f080ab893bd3d120db7fa05c3_96.webp",
+      "source_url": "https://github.com/Autovw/AdvancedNetherite",
+      "wiki_url": "https://github.com/Autovw/AdvancedNetherite/wiki",
+      "issues_url": "https://github.com/Autovw/AdvancedNetherite/issues",
+      "source": "modrinth",
+      "_jar": "advancednetherite-fabric-2.3.1-1.21.11.jar",
+      "_side_hint": "server"
+    },
+    "xp stream": {
+      "modrinth_id": "QZqv3OuH",
+      "slug": "xp-stream",
+      "title": "XP Stream",
+      "desc": "Absorbs XP orbs faster without clumping, while preserving the magic feel and core mechanics of normal XP collection.",
+      "side": "server",
+      "req": "optional",
+      "categories": [
+        "game-mechanics",
+        "mobs",
+        "optimization",
+        "utility"
+      ],
+      "icon_url": "https://cdn.modrinth.com/data/QZqv3OuH/f65db6d2ff987e5c3f0663b2e1df01f4c3c6d705_96.webp",
+      "source_url": "https://github.com/Jed-Tech/XP_Stream",
+      "wiki_url": null,
+      "issues_url": "https://github.com/Jed-Tech/XP_Stream/issues",
+      "source": "modrinth",
+      "_jar": "xp_stream-fabric-1.21.11-0.2.1.jar",
+      "_side_hint": "server"
+    },
+    "functional trims 2.0.1 (1.21.11)": {
+      "desc": "Adds customizable trims to clothing items.",
+      "side": "both",
+      "req": "optional",
+      "source": "ollama",
+      "title": "Functional Trims 2.0.1 (1.21.11)"
+    },
+    "tru.e ending": {
+      "desc": "Adds an ending to your server experience.",
+      "side": "server",
+      "req": "optional",
+      "source": "ollama",
+      "title": "Tru.E Ending"
     }
   },
   "datapacks": {
@@ -1501,6 +1620,10 @@
     "fix-promenade": {
       "desc": "This datapack fixes issues with the Promenade update in Minecraft.",
       "source": "ollama"
+    },
+    "adventure_zone": {
+      "desc": "This datapack creates an adventure zone with puzzles and challenges for players to complete.",
+      "source": "ollama"
     }
   },
   "config_map": {
@@ -1516,6 +1639,7 @@
       "enhancedgroups/enhancedgroups.properties",
       "fabric/indigo-renderer.properties",
       "fallingtree.json",
+      "functionaltrims.json",
       "iris-excluded.json",
       "iris.properties",
       "jei/blacklist.json",
@@ -1629,6 +1753,7 @@
       "fallingtree.json",
       "ferritecore.mixin.properties",
       "forgeconfigapiport.toml",
+      "functionaltrims.json",
       "harvest_with_ease-common.toml",
       "lithium.properties",
       "lithostitched.json",
@@ -1648,8 +1773,8 @@
       "spark/activity.json",
       "spark/config.json",
       "spark/tmp/about.txt",
-      "spark/tmp/spark-315b54d221761-libasyncProfiler.so.tmp",
-      "spark/tmp/spark-316bebf99c1d7-profile-data.jfr.tmp",
+      "spark/tmp/spark-104914fc336a8-profile-data.jfr.tmp",
+      "spark/tmp/spark-f65329fc68fc-libasyncProfiler.so.tmp",
       "sparsestructures.json5",
       "tectonic.json",
       "towns_and_towers/structure_enable_or_disable_new.json5",
@@ -1813,7 +1938,8 @@
       "xaero/lib/common.cfg",
       "xaero/lib/server_profiles/default.cfg",
       "xaero/minimap/common.cfg",
-      "xaero/minimap/server_profiles/default.cfg"
+      "xaero/minimap/server_profiles/default.cfg",
+      "xp_stream.json"
     ]
   }
 }
